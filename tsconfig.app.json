@@ -1,17 +1,37 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
+    "target": "ES2024",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "moduleResolution": "node",
     "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"]
     },
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "incremental": true,
+    "allowUnreachableCode": false, // return bei then-else und try-catch
+    "allowUnusedLabels": false, // Labels muessen auch benutzt werden
+    "esModuleInterop": true, // Kompatibilitaet zwischen CommonJS und ES Modulen
+    // "exactOptionalPropertyTypes": true, // bei optionalen Properties ggf. explizit undefined spezifizieren
+    "forceConsistentCasingInFileNames": true, // Gross-/Kleinschreibung bei Dateinamen
+    "noErrorTruncation": true,
+    "noImplicitAny": true, // Fehler bei implizitem Typ "any"
+    "noImplicitOverride": true, // Schluesselwort "override"
+    "noImplicitReturns": true, // bei jedem Code-Pfad muss es "return" geben
+    "noImplicitThis": true, // Fehler bei this mit implizitem "any"
+    "noUncheckedIndexedAccess": true, // undefined bei Resultaten fuer Index-Signaturen
+    "preserveWatchOutput": true, 
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
