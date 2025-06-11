@@ -5,7 +5,7 @@ import { login } from '@graphql/queries';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');     // <-- Umbenannt
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -13,41 +13,45 @@ const LoginForm = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await login(email, password);
+      /** login(username, password) NICHT email! **/
+      const response = await login(username, password);
+
       if (!response.loggedIn) {
         setError('Login fehlgeschlagen. Bitte überprüfe deine Eingaben.');
         if (response.errors) {
-          setError((prev) => prev + ' ' + response.errors.join(' '));
+          setError(prev => prev + ' ' + response.errors.join(' '));
         }
       } else {
         navigate('/search');
       }
-    } catch {
-      setError('Ein Fehler ist aufgetreten.');
+    } catch (err: any) {
+      setError('Ein Fehler ist aufgetreten: ' + (err.message || 'Unbekannter Fehler'));
+      console.error(err);
     }
   };
 
   return (
     <Box maxW="md" mx="auto" mt={8} p={6} borderWidth="1px" borderRadius="md">
       <form onSubmit={handleSubmit}>
-        <Text mb={1} fontWeight="bold">Email Adresse</Text>
-        <Input
-          type="email"
-          placeholder="Email eingeben"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+        <Text mb={1} fontWeight="bold">Benutzername</Text>
+        <Input                           // type="text" reicht hier
+          placeholder="Benutzername"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
           mb={3}
           required
         />
+
         <Text mb={1} fontWeight="bold">Passwort</Text>
         <Input
           type="password"
           placeholder="Passwort"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           mb={3}
           required
         />
+
         {error && (
           <Alert.Root status="error" mb={3} borderRadius="md" p={4}>
             <Alert.Indicator />
@@ -57,6 +61,7 @@ const LoginForm = () => {
             </Alert.Content>
           </Alert.Root>
         )}
+
         <Button colorScheme="blue" type="submit" width="full">
           Einloggen
         </Button>
