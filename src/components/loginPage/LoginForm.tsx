@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Box, Input, Button, Text, Alert } from '@chakra-ui/react';
+import { Box, Input, Button, Text, Alert, Flex, Image } from '@chakra-ui/react';
 import { login } from '@graphql/queries';
+import './login.css';
+import logo from './logo.png';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -31,42 +33,49 @@ const LoginForm = () => {
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth="1px" borderRadius="md">
-      <form onSubmit={handleSubmit}>
-        <Text mb={1} fontWeight="bold">Benutzername</Text>
-        <Input                           // type="text" reicht hier
-          placeholder="Benutzername"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          mb={3}
-          required
+    <Flex className="login-flex" justify="center" align="center">
+      <Box position="relative" className="login-box">
+        <Image
+          src={logo}
+          alt="Login Logo"
+          boxSize="100px"
+          position="absolute"
+          top="10px"
+          left="10px"
         />
-
-        <Text mb={1} fontWeight="bold">Passwort</Text>
-        <Input
-          type="password"
-          placeholder="Passwort"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          mb={3}
-          required
-        />
-
-        {error && (
-          <Alert.Root status="error" mb={3} borderRadius="md" p={4}>
-            <Alert.Indicator />
-            <Alert.Content>
-              <Alert.Title>Fehler</Alert.Title>
-              <Alert.Description>{error}</Alert.Description>
-            </Alert.Content>
-          </Alert.Root>
-        )}
-
-        <Button colorScheme="blue" type="submit" width="full">
-          Einloggen
-        </Button>
-      </form>
-    </Box>
+        <form onSubmit={handleSubmit}>
+          <Input
+            className="login-input"
+            placeholder="Benutzername"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            mb={3}
+            required
+          />
+          <Input
+            className="login-input"
+            type="password"
+            placeholder="Passwort"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            mb={3}
+            required
+          />
+          {error && (
+            <Alert.Root status="error" mb={3} borderRadius="md" p={4}>
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>Fehler</Alert.Title>
+                <Alert.Description>{error}</Alert.Description>
+              </Alert.Content>
+            </Alert.Root>
+          )}
+          <Button colorScheme="blue" type="submit" width="full">
+            Einloggen
+          </Button>
+        </form>
+      </Box>
+    </Flex>
   );
 };
 
