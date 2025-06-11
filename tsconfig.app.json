@@ -9,7 +9,9 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@graphql/*": ["./src/graphql/*"],
+      "@context/*": ["./src/context/*"],
     },
     "declaration": true,
     "removeComments": true,

@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { HStack, Button } from '@chakra-ui/react'
+import Searchbar from './components/search/Searchbar'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -33,6 +34,7 @@ function App() {
         <Button>Click me</Button>
         <Button>Click me</Button>
     </HStack>
+    <Searchbar />
     </>
   )
 }
