@@ -38,10 +38,12 @@ export interface LoginStatus {
     issuer?: string;
 }
 
-// Eventuell umschreiben zu const-array
-export type BuchArt = 
-  | "DRUCKAUSGABE"
-  | "KINDLE";
+export const BuchArt = {
+  DRUCKAUSGABE: 'DRUCKAUSGABE',
+  KINDLE:        'KINDLE',
+} as const;
+
+export type BuchArt = typeof BuchArt[keyof typeof BuchArt];
 
 export interface SuchkriterienInput {
     titel?: string;
@@ -49,4 +51,44 @@ export interface SuchkriterienInput {
     rating?: number;
     art?: BuchArt;
     lieferbar?: boolean;
+}
+
+export interface Titel {
+    titel: string;
+    untertitel?: string;
+}
+
+export interface Buch {
+    id: number;
+    version: number;
+    isbn: string;
+    rating?: number;
+    art: BuchArt;
+    preis: number;
+    lieferbar: boolean;
+    datum?: string;
+    homepage?: string;
+    schlagwoerter?: string[];
+    titel: Titel;
+    rabatt: (short: boolean) => string;
+}
+
+export type BuchFields =
+  | 'id'
+  | 'version'
+  | 'isbn'
+  | 'rating'
+  | 'art'
+  | 'preis'
+  | 'lieferbar'
+  | 'datum'
+  | 'homepage'
+  | 'schlagwoerter'
+  | 'titel'
+  | 'rabatt';
+
+
+export interface FilterParameter {
+    key: string;
+    value: string | boolean | number;
 }

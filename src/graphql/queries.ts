@@ -17,7 +17,7 @@ export const login = async (username: string, password: string) => {
 
   const options = {
       method: 'POST',
-      url: 'https://localhost:3000/graphql',
+      url: '/graphql',
       headers: {
           'Content-Type': 'application/json',
           'X-REQUEST-TYPE': 'GraphQL',
@@ -64,7 +64,7 @@ export const queryBuecher = async (
 
   const options = {
       method: 'POST',
-      url: 'https://localhost:3000/graphql',
+      url: '/graphql',
       headers: {
           'Content-Type': 'application/json',
           'X-REQUEST-TYPE': 'GraphQL',
