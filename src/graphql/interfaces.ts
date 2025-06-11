@@ -1,23 +1,23 @@
 export interface JwtTokenPayload {
-    exp: number;   // Zeitpunkt des Ablaufs
-    iat: number;   // Ausstellungszeitpunkt
-    jti: string;   // JWT ID
-    iss: string;   // Herausgeber
-    aud: string;   // Audience
-    sub: string;   // Subject
-    typ: string;   // Type
-    azp: string;   // Authorized party
-    session_state: string; 
-    acr: string;   // Authentication Context Class Reference
+    exp: number; // Zeitpunkt des Ablaufs
+    iat: number; // Ausstellungszeitpunkt
+    jti: string; // JWT ID
+    iss: string; // Herausgeber
+    aud: string; // Audience
+    sub: string; // Subject
+    typ: string; // Type
+    azp: string; // Authorized party
+    session_state: string;
+    acr: string; // Authentication Context Class Reference
     allowed_origins: string[];
     realm_access: { roles: string[] };
     resource_access: {
         [key: string]: {
             roles: string[];
-        }
+        };
     };
     scope: string;
-    sid: string;   // Session ID
+    sid: string; // Session ID
     email_verified: boolean;
     name: string;
     preferred_username: string;
@@ -39,11 +39,12 @@ export interface LoginStatus {
 }
 
 export const BuchArt = {
-  DRUCKAUSGABE: 'DRUCKAUSGABE',
-  KINDLE:        'KINDLE',
+    EPUB: 'EPUB',
+    HARDCOVER: 'HARDCOVER',
+    PAPERBACK: 'PAPERBACK',
 } as const;
 
-export type BuchArt = typeof BuchArt[keyof typeof BuchArt];
+export type BuchArt = (typeof BuchArt)[keyof typeof BuchArt];
 
 export interface SuchkriterienInput {
     titel?: string;
@@ -74,19 +75,18 @@ export interface Buch {
 }
 
 export type BuchFields =
-  | 'id'
-  | 'version'
-  | 'isbn'
-  | 'rating'
-  | 'art'
-  | 'preis'
-  | 'lieferbar'
-  | 'datum'
-  | 'homepage'
-  | 'schlagwoerter'
-  | 'titel'
-  | 'rabatt';
-
+    | 'id'
+    | 'version'
+    | 'isbn'
+    | 'rating'
+    | 'art'
+    | 'preis'
+    | 'lieferbar'
+    | 'datum'
+    | 'homepage'
+    | 'schlagwoerter'
+    | 'titel'
+    | 'rabatt';
 
 export interface FilterParameter {
     key: string;

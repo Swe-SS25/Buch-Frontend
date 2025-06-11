@@ -7,7 +7,7 @@ import { BuchArt, type SuchkriterienInput } from '@/graphql/interfaces';
 const Filter: React.FC = () => {
     const [lieferbar, setLieferbar] = useState<boolean>(true);
     const [rating, setRating] = useState<number>(5);
-    const [buchArt, setBuchArt] = useState<BuchArt>(BuchArt.KINDLE);
+    const [buchArt, setBuchArt] = useState<BuchArt>(BuchArt.EPUB);
     const { criteria, setCriteria } = useSearchCriteria();
 
     const propagateSearch = () => {
@@ -75,8 +75,9 @@ const Filter: React.FC = () => {
                         }
                     }
                 >
-                    <option value={BuchArt.KINDLE}>Kindle</option>
-                    <option value={BuchArt.DRUCKAUSGABE}>Druckausgabe</option>
+                    <option value={BuchArt.EPUB}>Epub</option>
+                    <option value={BuchArt.HARDCOVER}>Hardcover</option>
+                    <option value={BuchArt.PAPERBACK}>Paperback</option>
                 </select>
             </div>
         </div>

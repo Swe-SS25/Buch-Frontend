@@ -37,7 +37,7 @@ const BookList: React.FC = () => {
             {books.map((book: Buch) => (
                 <div key={book.id} className="d-flex justify-content-between align-items-center mb-2 p-2 bg-light">
                     <div className="text-truncate me-2" style={{ minWidth: 0 }}>
-                        <span>Buch: {book.titel.titel}, {book.titel.untertitel}, ISBN: {book.isbn}, Rating: {book.rating}, Preis: {book.preis} €</span>
+                        <span>Buch: {book.titel.titel}, {book.titel.untertitel}, ISBN: {book.isbn}, Rating: {book.rating}, Preis: {book.preis} €, Art: {book.art}</span>
                     </div>
                     
                 </div>

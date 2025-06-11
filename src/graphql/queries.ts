@@ -8,10 +8,9 @@ const auth = new Auth();
 export const login = async (username: string, password: string) => {
   const mutation = `
   mutation {
-      login(username: "${username}", password: "${password}") {
+      token(username: "${username}", password: "${password}") {
         access_token
         expires_in
-        roles
       }
   }`;
 
@@ -35,9 +34,9 @@ export const login = async (username: string, password: string) => {
   try {
     const result = await axios.request(options);
     const { errors, data } = result.data;
-    const { login } = data;
-    if (login) {
-      const { access_token } = login;
+    const { token } = data;
+    if (token) {
+      const { access_token } = token;
       const loggedIn = auth.setAuthCookie(access_token);
       if (!loggedIn) {
         throw new Error('Login fehlgeschlagen');
@@ -53,7 +52,6 @@ export const login = async (username: string, password: string) => {
   } catch (err: any) {
     LoginStatus.errors?.push(err.message);
   }
-
   return LoginStatus;
 };
 
