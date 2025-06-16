@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import type { Buch } from '@graphql/interfaces';
 import { useSearchCriteria } from '@context/SearchCriteriaContext';
 import { queryBuecher } from '@graphql/queries';
-import { Button, Flex, Link } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Buch[]>([]);

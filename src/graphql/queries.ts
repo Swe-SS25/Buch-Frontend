@@ -108,3 +108,44 @@ export const createBuch = async (
 
   return axios.request(options);
 };
+
+export const queryBuch = async (id: string): Promise<AxiosResponse> => {
+  const query = `
+    query GetBook($id: ID!) {
+      buch(id: $id) {
+        isbn
+        version
+        rating
+        art
+        preis
+        lieferbar
+        datum
+        homepage
+        schlagwoerter
+        titel {
+          titel
+          untertitel
+        }
+        rabatt(short: true)
+      }
+    }
+  `;
+
+  const options = {
+    method: 'POST',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-REQUEST-TYPE': 'GraphQL',
+      ...(auth.checkAuthCookie() && {
+        Authorization: `Bearer ${auth.getAuthCookie().token}`,
+      }),
+    },
+    data: {
+      query,
+      variables: { id },
+    },
+  };
+
+  return axios.request(options);
+};

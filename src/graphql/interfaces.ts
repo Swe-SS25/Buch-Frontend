@@ -71,7 +71,7 @@ export interface Buch {
     homepage?: string;
     schlagwoerter?: string[];
     titel: Titel;
-    rabatt: (short: boolean) => string;
+    rabatt: string;
 }
 
 export type BuchFields =
