@@ -12,8 +12,11 @@ import {
   HStack,
   Button,
   InputGroup,
-  Wrap, WrapItem, Tag, TagLabel,
-  CloseButton, RadioGroup
+  Wrap,
+  WrapItem,
+  Tag,
+  TagLabel,
+  CloseButton,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { BuchArt, type AbbildungInput, type BuchInput } from "@/graphql/interfaces";
@@ -29,15 +32,8 @@ const ChakraSelect = chakra("select", {
   },
 });
 
-const lieferbarItems = [
-  { label: "Nein", value: "false" },
-  { label: "Ja", value: "true" },
-];
-
 const CreateBookForm: React.FC = () => {
   const navigate = useNavigate();
-
-  const [lieferbarValue, setLieferbarValue] = useState<"true" | "false">("true");
 
   //–– States
   const [titel, setTitel] = useState<string>("");
@@ -63,8 +59,8 @@ const CreateBookForm: React.FC = () => {
   const handleDatum = (e: React.ChangeEvent<HTMLInputElement>) => setDatum(e.target.value);
   const handleArt = (e: React.ChangeEvent<HTMLSelectElement>) => setArt(e.target.value as BuchArt);
   const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) => setIsbn(e.target.value);
-  const handlePreis = (_: string, valueAsNumber: number) => setPreis(valueAsNumber);
-  const handleRabatt = (_: string, valueAsNumber: number) => setRabatt(valueAsNumber);
+  const handlePreis = (valueAsNumber: number) => setPreis(valueAsNumber);
+  const handleRabatt = (valueAsNumber: number) => setRabatt(valueAsNumber);
   const handleSchlagwort = (e: React.ChangeEvent<HTMLInputElement>) => setSchlagwort(e.target.value);
   const addSchlagwort = () => {
     if (schlagwort.trim()) {
@@ -73,7 +69,6 @@ const CreateBookForm: React.FC = () => {
     }
   };
   const removeSchlagwort = (i: number) => setSchlagwoerter(prev => prev.filter((_, idx) => idx !== i));
-  const handleLieferbar = (checked: boolean) => setLieferbar(checked);
 
   const handleHomepage = (e: React.ChangeEvent<HTMLInputElement>) => setHomepage(e.target.value);
   const handleRating = (e: React.ChangeEvent<HTMLInputElement>) => setRating(Number(e.target.value));
@@ -104,7 +99,7 @@ const CreateBookForm: React.FC = () => {
       art,
       preis,
       rabatt,
-      lieferbar: lieferbarValue === "true",
+      lieferbar,
       datum,
       homepage,
       schlagwoerter,
@@ -166,42 +161,22 @@ const CreateBookForm: React.FC = () => {
         </Box>
 
         {/* Preis */}
-        {/* <Box>
+        <Box>
           <Text>Preis (€)</Text>
-          <NumberInput.Root
-            defaultValue="45"
-            onChange={handlePreis}
-            min={0}
-            formatOptions={{
-              style: "currency",
-              currency: "EUR",
-              currencyDisplay: "code",
-              currencySign: "accounting",
-            }}
-          >
+          <NumberInput.Root defaultValue="0" min={0} steps={0.01} onChange={handlePreis}>
             <NumberInput.Control />
             <NumberInput.Input />
           </NumberInput.Root>
-        </Box> */}
+        </Box>
 
         {/* Rabatt */}
-        {/* <Box>
+        <Box>
           <Text>Rabatt (%)</Text>
-          <NumberInput.Root
-            defaultValue="0"
-            onChange={handleRabatt}
-            min={0}
-            max={100}
-            formatOptions={{
-              style: "percent",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 2,
-            }}
-          >
+          <NumberInput.Root defaultValue="0" min={0} steps={0.01} onChange={handleRabatt}>
             <NumberInput.Control />
             <NumberInput.Input />
           </NumberInput.Root>
-        </Box> */}
+        </Box>
 
         {/* Schlagwörter */}
         <Box>
@@ -223,23 +198,31 @@ const CreateBookForm: React.FC = () => {
         </Box>
 
         {/* Lieferbar */}
-        {/* <Box>
-          <Text>Lieferbar</Text>
-          <RadioGroup.Root
-            value={lieferbarValue}
-            onValueChange={(e) => setLieferbarValue(e.value)}
-          >
-            <HStack gap="6">
-              {lieferbarItems.map((item) => (
-                <RadioGroup.Item key={item.value} value={item.value} asChild>
-                  <RadioGroup.ItemHiddenInput />
-                  <RadioGroup.ItemIndicator />
-                  <RadioGroup.ItemText>{item.label}</RadioGroup.ItemText>
-                </RadioGroup.Item>
-              ))}
-            </HStack>
-          </RadioGroup.Root>
-        </Box> */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>Lieferbar</Text>
+          <HStack gap={4}>
+            <chakra.label display="flex" alignItems="center">
+              <chakra.input
+                type="radio"
+                name="lieferbar"
+                value="true"
+                onChange={() => setLieferbar(true)}
+                mr={2}
+              />
+              Ja
+            </chakra.label>
+            <chakra.label display="flex" alignItems="center">
+              <chakra.input
+                type="radio"
+                name="lieferbar"
+                value="false"
+                onChange={() => setLieferbar(false)}
+                mr={2}
+              />
+              Nein
+            </chakra.label>
+          </HStack>
+        </Box>
 
         {/* Homepage */}
         <Box>
