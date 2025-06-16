@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Box, Input, Button, Alert, Flex, Image } from '@chakra-ui/react';
 import { login } from '@graphql/queries';
 import './login.css';
-import logo from './logo.png';
+import logo from '@/components/static/logo.png';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const LoginForm = () => {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Button colorScheme="blue" type="submit" width="full">
+          <Button colorScheme="blue" type="submit" width="full" className="button">
             Einloggen
           </Button>
         </form>

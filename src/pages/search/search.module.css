@@ -1,0 +1,31 @@
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    width: 20%;
+}
+
+.wrapper {
+    display: flex;
+    padding: 16px;
+}
+
+@media screen and (max-width: 1200px) {
+    .wrapper {
+    flex-direction: column;
+    }
+
+    .filter {
+        width: 100%;
+    }
+}
+
+.searchbar {
+    margin-bottom: 16px;
+}
+
+.booklist {
+    padding: 16px;
+    width: 80%;
+}
