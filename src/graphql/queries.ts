@@ -8,15 +8,16 @@ const auth = new Auth();
 export const login = async (username: string, password: string) => {
   const mutation = `
   mutation {
-      token(username: "${username}", password: "${password}") {
+      login(username: "${username}", password: "${password}") {
         access_token
         expires_in
+        roles
       }
   }`;
 
   const options = {
       method: 'POST',
-      url: '/graphql',
+      url: 'https://localhost:3000/graphql',
       headers: {
           'Content-Type': 'application/json',
           'X-REQUEST-TYPE': 'GraphQL',
@@ -34,9 +35,9 @@ export const login = async (username: string, password: string) => {
   try {
     const result = await axios.request(options);
     const { errors, data } = result.data;
-    const { token } = data;
-    if (token) {
-      const { access_token } = token;
+    const { login } = data;
+    if (login) {
+      const { access_token } = login;
       const loggedIn = auth.setAuthCookie(access_token);
       if (!loggedIn) {
         throw new Error('Login fehlgeschlagen');
@@ -52,6 +53,7 @@ export const login = async (username: string, password: string) => {
   } catch (err: any) {
     LoginStatus.errors?.push(err.message);
   }
+
   return LoginStatus;
 };
 
@@ -62,7 +64,7 @@ export const queryBuecher = async (
 
   const options = {
       method: 'POST',
-      url: '/graphql',
+      url: 'https://localhost:3000/graphql',
       headers: {
           'Content-Type': 'application/json',
           'X-REQUEST-TYPE': 'GraphQL',

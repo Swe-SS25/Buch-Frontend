@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Box, Input, Button, Text, Alert, Flex, Image } from '@chakra-ui/react';
+import { Box, Input, Button, Alert, Flex, Image } from '@chakra-ui/react';
 import { login } from '@graphql/queries';
 import './login.css';
 import logo from './logo.png';
