@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse } from 'axios';
-import type { SuchkriterienInput, LoginStatus } from "./interfaces";
+import type { SuchkriterienInput, LoginStatus, BuchInput } from "./interfaces";
 import { buildQuery } from './queryHelper';
 import Auth from './auth.ts';
 
@@ -75,6 +75,36 @@ export const queryBuecher = async (
       data: {
           query,
       },
+  };
+
+  return axios.request(options);
+};
+
+export const createBuch = async (
+  input: BuchInput,
+): Promise<AxiosResponse> => {
+  const mutation = `
+    mutation CreateBuch($input: BuchInput!) {
+      create(input: $input) {
+        id
+      }
+    }
+  `;
+
+  const options = {
+    method: 'POST',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-REQUEST-TYPE': 'GraphQL',
+      ...(auth.checkAuthCookie() && {
+        Authorization: `Bearer ${auth.getAuthCookie().token}`,
+      }),
+    },
+    data: {
+      query: mutation,
+      variables: { input },
+    },
   };
 
   return axios.request(options);
