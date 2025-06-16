@@ -74,18 +74,15 @@ const BookDetails: React.FC = () => {
   return (
     <Box maxW="container.lg" mx="auto" p={6}>
       <Grid templateColumns={{ base: '1fr', md: '5fr 7fr' }} gap={8}>
-        <Stack align="center" justify="space-between">
-           
+        <Flex justify="center">
             <Image
             src="https://archive.org/download/placeholder-image/placeholder-image.jpg"
             alt="Buchabbildung"
             maxW="250px"
             borderRadius="md"
             />
-             <Button asChild>
-              <a href="/search">Home</a>
-            </Button>
-        </Stack>
+        </Flex>
+            
 
         <Stack>
           <Row label="Titel" value={check(buch.titel.titel)} />

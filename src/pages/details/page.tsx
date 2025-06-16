@@ -1,5 +1,5 @@
 import BookDetails from '@/components/details/BookDetails';
-import { Card, Center } from '@chakra-ui/react';
+import { Button, Card, Center } from '@chakra-ui/react';
 
 const BuchDetails = () => {
   return (
@@ -8,6 +8,11 @@ const BuchDetails = () => {
         <Card.Body>
           <BookDetails />
         </Card.Body>
+        <Card.Footer>
+          <Button asChild>
+            <a href="/search">Home</a>
+          </Button>
+        </Card.Footer>
       </Card.Root>
     </Center>
   );
