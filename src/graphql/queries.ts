@@ -1,9 +1,7 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { SuchkriterienInput, LoginStatus, BuchInput } from "./interfaces";
 import { buildQuery } from './queryHelper';
-import Auth from './auth.ts';
-
-const auth = new Auth();
+import auth from '@/graphql/auth.ts';
 
 export const login = async (username: string, password: string) => {
   const mutation = `
@@ -103,6 +101,47 @@ export const createBuch = async (
     data: {
       query: mutation,
       variables: { input },
+    },
+  };
+
+  return axios.request(options);
+};
+
+export const queryBuch = async (id: string): Promise<AxiosResponse> => {
+  const query = `
+    query GetBook($id: ID!) {
+      buch(id: $id) {
+        isbn
+        version
+        rating
+        art
+        preis
+        lieferbar
+        datum
+        homepage
+        schlagwoerter
+        titel {
+          titel
+          untertitel
+        }
+        rabatt(short: true)
+      }
+    }
+  `;
+
+  const options = {
+    method: 'POST',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-REQUEST-TYPE': 'GraphQL',
+      ...(auth.checkAuthCookie() && {
+        Authorization: `Bearer ${auth.getAuthCookie().token}`,
+      }),
+    },
+    data: {
+      query,
+      variables: { id },
     },
   };
 

@@ -26,6 +26,5 @@ dist-ssr
 
 #Certificate
 cert/key.pem
-vite.config.ts
-cert/cert.pem
+
 

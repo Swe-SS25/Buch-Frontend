@@ -2,6 +2,8 @@
 import type { SuchkriterienInput } from '@graphql/interfaces';
 import { useSearchCriteria } from '@context/SearchCriteriaContext';
 import React, { useState } from 'react';
+import { Button, Input } from '@chakra-ui/react';
+import styles from './Searchbar.module.css';
 
 const Searchbar: React.FC = () => {
   const [title, setTitle] = useState<string>('');
@@ -20,13 +22,13 @@ const Searchbar: React.FC = () => {
   };
 
   return (
-    <div>
-      <input
+    <div className={styles.wrapper}>
+      <Input
         type="text"
         placeholder="Nach Title suchen"
         onChange={(e) => setTitle(e.target.value)}
       />
-      <button
+      <Button
         type="button"
         id="search-button"
         onClick={(e) => {
@@ -35,7 +37,7 @@ const Searchbar: React.FC = () => {
         }}
       >
         Suchen
-      </button>
+      </Button>
     </div>
   );
 };
