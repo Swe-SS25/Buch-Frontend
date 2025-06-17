@@ -4,6 +4,7 @@ import SearchPage from '@/pages/search/page';
 import CreateBookForm from '@/components/create/CreateBookForm';
 import BookDetail from '@/pages/details/page';
 import PrivateRoute from '@/components/privateRoute/privateRoute'; // <-- Auth-Schicht
+import AdminRoute from './components/privateRoute/adminRoute';
 
 function App() {
   return (
@@ -14,8 +15,11 @@ function App() {
       {/* Geschützte Routen */}
       <Route element={<PrivateRoute />}>
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/create" element={<CreateBookForm />} />
         <Route path="/:id/details" element={<BookDetail />} />
+      </Route>
+      
+      <Route element={<AdminRoute />}>
+        <Route path="/create" element={<CreateBookForm />} />
       </Route>
     </Routes>
   );
