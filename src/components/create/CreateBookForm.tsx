@@ -3,20 +3,19 @@
 import React, { useState } from 'react';
 import {
   Box,
-  SimpleGrid,
+  Stack,
+  HStack,
   Flex,
   Text,
   Input,
   chakra,
-  NumberInput,
-  HStack,
   Button,
   InputGroup,
   Wrap,
   WrapItem,
   Tag,
-  TagLabel,
   CloseButton,
+  Field,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -36,6 +35,21 @@ const ChakraSelect = chakra('select', {
   },
 });
 
+const isValidISBN = (isbn: string) => {
+  // Entferne Bindestriche und Leerzeichen
+  const clean = isbn.replace(/[\s-]/g, '');
+  if (!/^\d{13}$/.test(clean)) return false;
+
+  // Prüfziffer nach ISBN-13 Regel berechnen
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(clean.charAt(i)) * (i % 2 === 0 ? 1 : 3);
+  }
+  const check = (10 - (sum % 10)) % 10;
+  return check === parseInt(clean.charAt(12));
+};
+
+
 const CreateBookForm: React.FC = () => {
   const navigate = useNavigate();
 
@@ -45,6 +59,9 @@ const CreateBookForm: React.FC = () => {
   const [datum, setDatum] = useState<string>('');
   const [art, setArt] = useState<BuchArt>(BuchArt.EPUB);
   const [isbn, setIsbn] = useState<string>('');
+
+  const [isbnError, setIsbnError] = useState<string>('');
+
   const [preis, setPreis] = useState<number>(0);
   const [rabatt, setRabatt] = useState<number>(0);
   const [schlagwort, setSchlagwort] = useState<string>('');
@@ -66,10 +83,23 @@ const CreateBookForm: React.FC = () => {
     setDatum(e.target.value);
   const handleArt = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setArt(e.target.value as BuchArt);
-  const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setIsbn(e.target.value);
-  const handlePreis = (valueAsNumber: number) => setPreis(valueAsNumber);
-  const handleRabatt = (valueAsNumber: number) => setRabatt(valueAsNumber);
+  // const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) =>
+  //   setIsbn(e.target.value);
+  const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setIsbn(value);
+
+    if (value && !isValidISBN(value)) {
+      setIsbnError('Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)');
+    } else {
+      setIsbnError('');
+    }
+  };
+
+  const handlePreis = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPreis(Number(e.target.value));
+  const handleRabatt = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setRabatt(Number(e.target.value));
   const handleSchlagwort = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSchlagwort(e.target.value);
   const addSchlagwort = () => {
@@ -135,176 +165,193 @@ const CreateBookForm: React.FC = () => {
 
   return (
     <Box as="form" onSubmit={onSubmit} p={4}>
-      <SimpleGrid columns={{ base: 1, md: 2 }}>
-        {/* Titel */}
-        <Box>
-          <Text fontWeight="bold">Titel *</Text>
-          <Input
-            value={titel}
-            onChange={handleTitel}
-            placeholder="Titel eingeben"
-          />
-        </Box>
-
-        {/* Untertitel */}
-        <Box>
-          <Text>Untertitel</Text>
-          <Input
-            value={untertitel}
-            onChange={handleUntertitel}
-            placeholder="Untertitel eingeben"
-          />
-        </Box>
-
-        {/* Erscheinungsdatum */}
-        <Box>
-          <Text>Erscheinungsdatum</Text>
-          <Input type="date" value={datum} onChange={handleDatum} />
-        </Box>
-
-        {/* Buchart */}
-        <Box>
-          <Text>Buchart</Text>
-          <ChakraSelect value={art} onChange={handleArt}>
-            {Object.values(BuchArt).map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </ChakraSelect>
-        </Box>
-
-        {/* ISBN */}
-        <Box>
-          <Text>ISBN</Text>
-          <Input
-            value={isbn}
-            onChange={handleIsbn}
-            placeholder="ISBN eingeben"
-          />
-        </Box>
-
-        {/* Preis */}
-        {/* <Box>
-          <Text>Preis (€)</Text>
-          <NumberInput.Root
-            defaultValue="0"
-            min={0}
-            steps={0.01}
-            onChange={handlePreis}
-          >
-            <NumberInput.Control />
-            <NumberInput.Input />
-          </NumberInput.Root>
-        </Box> */}
-
-        {/* Rabatt
-        <Box>
-          <Text>Rabatt (%)</Text>
-          <NumberInput.Root
-            defaultValue="0"
-            min={0}
-            steps={0.01}
-            onChange={handleRabatt}
-          >
-            <NumberInput.Control />
-            <NumberInput.Input />
-          </NumberInput.Root>
-        </Box> */}
-
-        {/* Schlagwörter */}
-        <Box>
-          <Text>Schlagwörter</Text>
-          <HStack>
+      <Stack gap={6}>
+        {/* Titel und Untertitel */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text fontWeight="bold">Titel *</Text>
             <Input
-              value={schlagwort}
-              onChange={handleSchlagwort}
-              placeholder="Schlagwort"
+              value={titel}
+              onChange={handleTitel}
+              placeholder="Titel eingeben"
             />
-            <Button size={'sm'} onClick={addSchlagwort} type="button">
-              {' '}
-              +{' '}
-            </Button>
-          </HStack>
-          <Wrap mt={'2'} gap={'5'}>
-            {schlagwoerter.map((w, i) => (
-              <WrapItem key={i}>
-                <Tag.Root>
-                  <TagLabel>{w}</TagLabel>
-                  <CloseButton onClick={() => removeSchlagwort(i)} />
-                </Tag.Root>
-              </WrapItem>
-            ))}
-          </Wrap>
-        </Box>
-
-        {/* Lieferbar */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Lieferbar
-          </Text>
-          <HStack gap={4}>
-            <chakra.label display="flex" alignItems="center">
-              <chakra.input
-                type="radio"
-                name="lieferbar"
-                value="true"
-                onChange={() => setLieferbar(true)}
-                mr={2}
-              />
-              Ja
-            </chakra.label>
-            <chakra.label display="flex" alignItems="center">
-              <chakra.input
-                type="radio"
-                name="lieferbar"
-                value="false"
-                onChange={() => setLieferbar(false)}
-                mr={2}
-              />
-              Nein
-            </chakra.label>
-          </HStack>
-        </Box>
-
-        {/* Homepage */}
-        <Box>
-          <Text>Homepage</Text>
-          <InputGroup startAddon="https://">
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Untertitel</Text>
             <Input
-              placeholder="yoursite.com"
-              value={homepage}
-              onChange={handleHomepage}
+              value={untertitel}
+              onChange={handleUntertitel}
+              placeholder="Untertitel eingeben"
             />
-          </InputGroup>
-        </Box>
+          </Box>
+        </HStack>
 
-        {/* Rating */}
-        <Box>
-          <Text>Rating</Text>
-          <Input
-            type="number"
-            min={1}
-            max={5}
-            value={rating}
-            onChange={handleRating}
-            placeholder="1–5"
-          />
-        </Box>
+        {/* Erscheinungsdatum und Buchart */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text>Erscheinungsdatum</Text>
+            <Input type="date" value={datum} onChange={handleDatum} />
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Buchart</Text>
+            <ChakraSelect value={art} onChange={handleArt}>
+              {Object.values(BuchArt).map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </ChakraSelect>
+          </Box>
+        </HStack>
 
-        {/* Abbildungen */}
-        {/* <Box>
-          <Text>Abbildungen</Text>
-          <Stack spacing={2}>
-            <Input placeholder="Beschriftung" value={beschriftung} onChange={handleBeschriftung} />
-            <Input placeholder="Content-Type" value={contentType} onChange={handleContentType} />
-            <Button size="sm" onClick={addAbbildung}>Abbildung hinzufügen</Button>
-            {abbildungen.map((a, i) => (
-              <Text key={i}>{a.beschriftung}: {a.contentType}</Text>
-            ))}
-          </Stack>
-        </Box> */}
-      </SimpleGrid>
+        {/* ISBN und Preis */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text>ISBN</Text>
+            <Field.Root invalid={!!isbnError}>
+              <Input
+                value={isbn}
+                onChange={handleIsbn}
+                placeholder="z. B. 978-0-007-00644-1"
+              />
+              {isbnError && (
+                <Field.ErrorText>
+                  {isbnError}
+                </Field.ErrorText>
+              )}
+            </Field.Root>
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Preis (€)</Text>
+            <Input
+              type="number"
+              min={0}
+              step={0.01}
+              value={preis}
+              onChange={handlePreis}
+              placeholder="Preis"
+            />
+          </Box>
+        </HStack>
+
+        {/* Rabatt und Schlagwörter */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text>Rabatt (%)</Text>
+            <Input
+              type="number"
+              min={0}
+              step={0.01}
+              value={rabatt}
+              onChange={handleRabatt}
+              placeholder="Rabatt"
+            />
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Schlagwörter</Text>
+            <HStack>
+              <Input
+                value={schlagwort}
+                onChange={handleSchlagwort}
+                placeholder="Schlagwort"
+              />
+              <Button size={'sm'} onClick={addSchlagwort} type="button">
+                +
+              </Button>
+            </HStack>
+            <Wrap mt={'2'} gap={'5'}>
+              {schlagwoerter.map((w, i) => (
+                <WrapItem key={i}>
+                  <Tag.Root>
+                    <Tag.Label>{w}</Tag.Label>
+                    <CloseButton onClick={() => removeSchlagwort(i)} />
+                  </Tag.Root>
+                </WrapItem>
+              ))}
+            </Wrap>
+          </Box>
+        </HStack>
+
+        {/* Lieferbar und Homepage */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text fontWeight="bold" mb={2}>
+              Lieferbar
+            </Text>
+            <HStack gap={4}>
+              <chakra.label display="flex" alignItems="center">
+                <chakra.input
+                  type="radio"
+                  name="lieferbar"
+                  value="true"
+                  checked={lieferbar}
+                  onChange={() => setLieferbar(true)}
+                  mr={2}
+                />
+                Ja
+              </chakra.label>
+              <chakra.label display="flex" alignItems="center">
+                <chakra.input
+                  type="radio"
+                  name="lieferbar"
+                  value="false"
+                  checked={!lieferbar}
+                  onChange={() => setLieferbar(false)}
+                  mr={2}
+                />
+                Nein
+              </chakra.label>
+            </HStack>
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Homepage</Text>
+            <InputGroup
+              startElement="https://"
+              startElementProps={{ color: "fg.muted" }}
+            >
+              <Input ps="8ch" placeholder="yoursite.com" value={homepage} onChange={handleHomepage}/>
+            </InputGroup>
+          </Box>
+        </HStack>
+
+        {/* Rating und Abbildungen */}
+        <HStack gap={6} align="flex-start" flexWrap="wrap">
+          <Box flex="1" minW={0}>
+            <Text>Rating</Text>
+            <Input
+              type="number"
+              min={1}
+              max={5}
+              value={rating}
+              onChange={handleRating}
+              placeholder="1–5"
+            />
+          </Box>
+          <Box flex="1" minW={0}>
+            <Text>Abbildungen</Text>
+            <Stack gap={2}>
+              <Input
+                placeholder="Beschriftung"
+                value={beschriftung}
+                onChange={handleBeschriftung}
+              />
+              <Input
+                placeholder="Content-Type"
+                value={contentType}
+                onChange={handleContentType}
+              />
+              <Button size="sm" onClick={addAbbildung} type="button">
+                Abbildung hinzufügen
+              </Button>
+              {abbildungen.map((a, i) => (
+                <Text key={i}>
+                  {a.beschriftung}: {a.contentType}
+                </Text>
+              ))}
+            </Stack>
+          </Box>
+        </HStack>
+      </Stack>
 
       {error && (
         <Text color="red.500" mt={4}>

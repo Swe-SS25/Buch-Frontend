@@ -77,36 +77,6 @@ export const queryBuecher = async (
   return axios.request(options);
 };
 
-export const createBuch = async (
-  input: BuchInput,
-): Promise<AxiosResponse> => {
-  const mutation = `
-    mutation CreateBuch($input: BuchInput!) {
-      create(input: $input) {
-        id
-      }
-    }
-  `;
-
-  const options = {
-    method: 'POST',
-    url: '/graphql',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-REQUEST-TYPE': 'GraphQL',
-      ...(auth.checkAuthCookie() && {
-        Authorization: `Bearer ${auth.getAuthCookie().token}`,
-      }),
-    },
-    data: {
-      query: mutation,
-      variables: { input },
-    },
-  };
-
-  return axios.request(options);
-};
-
 export const queryBuch = async (id: string): Promise<AxiosResponse> => {
   const query = `
     query GetBook($id: ID!) {
@@ -142,6 +112,36 @@ export const queryBuch = async (id: string): Promise<AxiosResponse> => {
     data: {
       query,
       variables: { id },
+    },
+  };
+
+  return axios.request(options);
+};
+
+export const createBuch = async (
+  input: BuchInput,
+): Promise<AxiosResponse> => {
+  const mutation = `
+    mutation CreateBuch($input: BuchInput!) {
+      create(input: $input) {
+        id
+      }
+    }
+  `;
+
+  const options = {
+    method: 'POST',
+    url: '/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-REQUEST-TYPE': 'GraphQL',
+      ...(auth.checkAuthCookie() && {
+        Authorization: `Bearer ${auth.getAuthCookie().token}`,
+      }),
+    },
+    data: {
+      query: mutation,
+      variables: { input },
     },
   };
 

@@ -7,10 +7,10 @@ import path from 'path';
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
-    },
+  //   https: {
+  //     key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
+  //     cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
+  //   },
     proxy: {
       '/graphql': {
         target: 'https://localhost:3000',
