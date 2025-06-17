@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({  onLogout }) => {
         <Button onClick={onLogout} className={styles.logoutButton}>
           <Image
           src={logoutIcon}
-          alt="Login Logo"
+          alt="Logout Logo"
           className={styles.logout}
         />
         </Button>

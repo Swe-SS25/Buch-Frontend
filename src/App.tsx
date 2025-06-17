@@ -1,18 +1,25 @@
 import { Routes, Route } from 'react-router-dom';
-import LoginForm from '@/pages/login/LoginForm';
-import SearchPage from '@/pages/search/page.tsx';
+import LoginPage from '@/pages/login/page';
+import SearchPage from '@/pages/search/page';
 import CreateBookForm from '@/components/create/CreateBookForm';
-import BookDetail from '@/pages/details/page.tsx';
+import BookDetail from '@/pages/details/page';
+import PrivateRoute from '@/components/privateRoute/privateRoute'; // <-- Auth-Schicht
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LoginForm />} />
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/create" element={<CreateBookForm />} />
-      <Route path="/:id/details" element={<BookDetail />} />
+      {/* Öffentliche Route */}
+      <Route path="/" element={<LoginPage />} />
+
+      {/* Geschützte Routen */}
+      <Route element={<PrivateRoute />}>
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/create" element={<CreateBookForm />} />
+        <Route path="/:id/details" element={<BookDetail />} />
+      </Route>
     </Routes>
   );
 }
 
 export default App;
+

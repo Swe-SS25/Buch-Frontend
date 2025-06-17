@@ -9,10 +9,15 @@ import styles from './search.module.css';
 import {  IconButton, } from '@chakra-ui/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import AnlegeButton from '@/components/search/bookList/AnlegeButton';
+import Auth from '@/graphql/auth'; // Pfad anpassen
+import { useNavigate } from 'react-router';
 
 const SearchPage: React.FC = () => {
+  const navigate = useNavigate();
+
   function handleLogout(): void {
-    throw new Error('Function not implemented.');
+    Auth.removeAuthCookie(); // Cookie löschen
+    navigate('/');   // z.B. zur Login-Seite weiterleiten
   }
 
   const [isOpen, setIsOpen] = useState(false);
