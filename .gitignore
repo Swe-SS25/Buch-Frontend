@@ -27,4 +27,8 @@ dist-ssr
 #Certificate
 cert/key.pem
 
-
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
