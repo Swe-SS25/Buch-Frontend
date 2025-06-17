@@ -1,9 +1,7 @@
 import axios, { type AxiosResponse } from 'axios';
 import type { SuchkriterienInput, LoginStatus, BuchInput } from "./interfaces";
 import { buildQuery } from './queryHelper';
-import Auth from './auth.ts';
-
-const auth = new Auth();
+import auth from '@/graphql/auth.ts';
 
 export const login = async (username: string, password: string) => {
   const mutation = `

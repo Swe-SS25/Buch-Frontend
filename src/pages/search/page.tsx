@@ -8,6 +8,7 @@ import Navbar from '@/components/Nav/navbar';
 import styles from './search.module.css';
 import {  IconButton, } from '@chakra-ui/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import AnlegeButton from '@/components/search/bookList/AnlegeButton';
 
 const SearchPage: React.FC = () => {
   function handleLogout(): void {
@@ -35,6 +36,8 @@ const SearchPage: React.FC = () => {
             >
               {isOpen ? <FaTimes /> : <FaBars />}
             </IconButton>
+            <br />
+            <AnlegeButton />
           </div>
           <div className={styles.booklist}>
             <BookList />

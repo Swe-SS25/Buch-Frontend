@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import type { Buch } from '@graphql/interfaces';
 import { useSearchCriteria } from '@context/SearchCriteriaContext';
 import { queryBuecher } from '@graphql/queries';
-import { Button, Flex, Table } from '@chakra-ui/react';
+import { Button, Table } from '@chakra-ui/react';
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Buch[]>([]);
@@ -45,16 +45,19 @@ const BookList: React.FC = () => {
         </Table.Header>
         <Table.Body>
           {books.map((book: Buch) => (
-            <Table.Row>
+            <Table.Row key={book.id}>
               <Table.Cell>{book.titel.titel}</Table.Cell>
               <Table.Cell>{book.titel.untertitel}</Table.Cell>
               <Table.Cell>{book.isbn}</Table.Cell>
               <Table.Cell>{book.rating}</Table.Cell>
               <Table.Cell>{book.preis}</Table.Cell>
               <Table.Cell>{book.art}</Table.Cell>
-              <Button asChild>
-                <a href={`/${book.id}/details`}>Details</a>
-              </Button>
+              <Table.Cell>
+                <Button asChild>
+                  <a href={`/${book.id}/details`}>Details</a>
+                </Button>
+              </Table.Cell>
+              
             </Table.Row>
           ))}
         </Table.Body>
