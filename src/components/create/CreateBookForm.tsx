@@ -9,7 +9,6 @@ import {
   Flex,
   HStack,
   Input,
-  InputGroup,
   Stack,
   Tag,
   Text,
