@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-json
+
+  - repo: https://github.com/prettier/prettier
+    rev: "3.2.5"
+    hooks:
+      - id: prettier
+        files: "\\.(js|ts|jsx|tsx|json|css|scss|md|yml|yaml)$"
+
+  - repo: https://github.com/mirrors/eslint
+    rev: v8.57.0
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: eslint
+        language: node
+        types: [javascript, typescript]
+        require_serial: true
+        args: ["."]
+
+  - repo: https://github.com/dustinspecker/lockfile-lint
+    rev: v4.3.7
+    hooks:
+      - id: lockfile-lint
+        name: Validate npm lockfile
+        entry: lockfile-lint
+        language: node
+        types: [json]
+        args:
+          - --type npm
+          - --path package-lock.json
+          - --validate-https
+          - --allowed-hosts npm

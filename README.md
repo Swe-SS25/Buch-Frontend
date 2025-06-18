@@ -51,4 +51,35 @@ export default tseslint.config({
     ...reactDom.configs.recommended.rules,
   },
 })
-```
+
+⚙️ Automated Quality Checks with GitHub Actions and pre-commit
+
+Our project uses GitHub Actions and pre-commit hooks to ensure high code quality and prevent issues before they reach production.
+
+✅ GitHub Actions
+
+We run the following checks automatically on every pull request and on every push to main:
+    •    Linting using ESLint
+    •    End-to-end testing with Playwright
+    •    Build verification to ensure the project compiles successfully
+
+These checks are enforced via branch protection rules and must pass before merging into the main branch.
+
+🔐 pre-commit Hooks
+
+We use pre-commit to run local validations before each commit:
+    •    Remove trailing whitespace
+    •    Ensure files end with a newline
+    •    Run ESLint on JavaScript/TypeScript files
+    •    Format files using Prettier
+    •    Validate the structure of package-lock.json
+
+To enable pre-commit locally, run the following:
+
+pip install pre-commit
+pre-commit install
+
+You can manually run all checks with:
+
+pre-commit run --all-files
+´´´
