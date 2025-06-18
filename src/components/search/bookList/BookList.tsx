@@ -12,7 +12,7 @@ const BookList: React.FC = () => {
 
   useEffect(() => {
     console.log(criteria);
-    const response = queryBuecher(criteria).then((response) => {
+    queryBuecher(criteria).then((response) => {
       console.log(response);
       if (response.status == 200) {
         if (response.data.data.buecher) {

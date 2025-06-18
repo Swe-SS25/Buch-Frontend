@@ -92,9 +92,9 @@ const Filter: React.FC = () => {
       <br />
       <Button
         variant="solid"
-        onClick={(e) => {
-          propagateSearch();
-        }}
+        onClick={
+          propagateSearch
+        }
       >
         Save Filter
       </Button>
