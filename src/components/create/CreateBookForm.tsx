@@ -15,6 +15,7 @@ import {
   Text,
   Wrap,
   WrapItem,
+  RatingGroup,
 } from '@chakra-ui/react';
 import { HiUpload } from 'react-icons/hi';
 import React, { useState } from 'react';
@@ -30,18 +31,6 @@ import { createBuch } from '@/graphql/queries';
 function isValidISBN(isbn: string): boolean {
   // Entferne Bindestriche und Leerzeichen
   const cleanIsbn = isbn.replace(/[-\s]/g, '');
-
-  // Prüfe auf ISBN-10
-  if (/^\d{9}[\dX]$/.test(cleanIsbn)) {
-    let sum = 0;
-    for (let i = 0; i < 9; i++) {
-      sum += (i + 1) * parseInt(cleanIsbn.charAt(i));
-    }
-    let check =
-      cleanIsbn.charAt(9) === 'X' ? 10 : parseInt(cleanIsbn.charAt(9));
-    sum += 10 * check;
-    return sum % 11 === 0;
-  }
 
   // Prüfe auf ISBN-13
   if (/^\d{13}$/.test(cleanIsbn)) {
@@ -437,14 +426,17 @@ const CreateBookForm: React.FC = () => {
           <Box flex="1" minW={0}>
             <Text>Rating</Text>
             <Field.Root invalid={!!ratingError}>
-              <Input
-                type="number"
-                min={1}
-                max={5}
+              <RatingGroup.Root
+                count={5}
+                size="md"
                 value={rating}
-                onChange={handleRating}
-                placeholder="1–5"
-              />
+                onValueChange={({ value }: { value: number | null }) =>
+                  handleRating({ target: { value: value ?? 0 } } as any)
+                }
+              >
+                <RatingGroup.HiddenInput />
+                <RatingGroup.Control />
+              </RatingGroup.Root>
               {ratingError && <Field.ErrorText>{ratingError}</Field.ErrorText>}
             </Field.Root>
           </Box>
