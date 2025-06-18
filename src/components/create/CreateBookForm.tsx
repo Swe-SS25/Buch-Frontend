@@ -1,29 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
 import {
   Box,
-  Stack,
-  HStack,
-  Flex,
-  Text,
-  Input,
-  chakra,
   Button,
-  InputGroup,
-  Wrap,
-  WrapItem,
-  Tag,
+  chakra,
   CloseButton,
   Field,
+  Flex,
+  HStack,
+  Input,
+  InputGroup,
+  Stack,
+  Tag,
+  Text,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
 import {
   BuchArt,
   type AbbildungInput,
   type BuchInput,
 } from '@/graphql/interfaces';
 import { createBuch } from '@/graphql/queries';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChakraSelect = chakra('select', {
   base: {
@@ -35,33 +35,42 @@ const ChakraSelect = chakra('select', {
   },
 });
 
+// --- Validierungsfunktionen ---
 const isValidISBN = (isbn: string) => {
-  // Entferne Bindestriche und Leerzeichen
   const clean = isbn.replace(/[\s-]/g, '');
   if (!/^\d{13}$/.test(clean)) return false;
-
-  // Prüfziffer nach ISBN-13 Regel berechnen
   let sum = 0;
-  for (let i = 0; i < 12; i++) {
-    sum += parseInt(clean.charAt(i)) * (i % 2 === 0 ? 1 : 3);
-  }
+  for (let i = 0; i < 12; i++)
+    sum += parseInt(clean[i] ?? '0') * (i % 2 === 0 ? 1 : 3);
   const check = (10 - (sum % 10)) % 10;
-  return check === parseInt(clean.charAt(12));
+  return check === parseInt(clean[12] ?? '0');
 };
 
+const isValidRating = (value: number) =>
+  Number.isInteger(value) && value >= 0 && value <= 5;
+
+const isValidPreis = (value: number) =>
+  typeof value === 'number' && !isNaN(value) && value >= 0;
+
+const isValidRabatt = (value: number | undefined) =>
+  value === undefined || (value >= 0 && value <= 1);
+
+const isValidDate = (value: string | undefined) =>
+  !value || /^\d{4}-\d{2}-\d{2}$/.test(value);
+
+const isValidUrl = (value: string | undefined) =>
+  !value || /^https?:\/\/[^\s$.?#].[^\s]*$/.test(value);
 
 const CreateBookForm: React.FC = () => {
   const navigate = useNavigate();
 
-  //–– States
+  // States:
+  // States für die Felder
   const [titel, setTitel] = useState<string>('');
   const [untertitel, setUntertitel] = useState<string>('');
   const [datum, setDatum] = useState<string>('');
   const [art, setArt] = useState<BuchArt>(BuchArt.EPUB);
   const [isbn, setIsbn] = useState<string>('');
-
-  const [isbnError, setIsbnError] = useState<string>('');
-
   const [preis, setPreis] = useState<number>(0);
   const [rabatt, setRabatt] = useState<number>(0);
   const [schlagwort, setSchlagwort] = useState<string>('');
@@ -72,34 +81,64 @@ const CreateBookForm: React.FC = () => {
   const [beschriftung, setBeschriftung] = useState<string>('');
   const [contentType, setContentType] = useState<string>('');
   const [abbildungen, setAbbildungen] = useState<AbbildungInput[]>([]);
+
+  // States für die Fehlerbehandlung
+  const [titelError, setTitelError] = useState<string>('');
+  const [datumError, setDatumError] = useState<string>('');
+  const [isbnError, setIsbnError] = useState<string>('');
+  const [preisError, setPreisError] = useState<string>('');
+  const [rabattError, setRabattError] = useState<string>('');
+  const [homepageError, setHomepageError] = useState<string>('');
+  const [ratingError, setRatingError] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-  //–– Handlers
-  const handleTitel = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setTitel(e.target.value);
+  // --- Handlers mit Validierung ---
+  const handleTitel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTitel(value);
+    setTitelError(value.trim() === '' ? 'Titel ist ein Pflichtfeld.' : '');
+  };
+
   const handleUntertitel = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUntertitel(e.target.value);
-  const handleDatum = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setDatum(e.target.value);
-  const handleArt = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    setArt(e.target.value as BuchArt);
-  // const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   setIsbn(e.target.value);
+
+  const handleDatum = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDatum(value);
+    setDatumError(
+      isValidDate(value) ? '' : 'Datum muss im Format JJJJ-MM-TT sein.',
+    );
+  };
+
+  const handleArt = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as BuchArt;
+    setArt(value);
+  };
+
   const handleIsbn = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setIsbn(value);
-
-    if (value && !isValidISBN(value)) {
-      setIsbnError('Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)');
-    } else {
-      setIsbnError('');
-    }
+    setIsbnError(
+      value && !isValidISBN(value)
+        ? 'Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)'
+        : '',
+    );
   };
 
-  const handlePreis = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setPreis(Number(e.target.value));
-  const handleRabatt = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setRabatt(Number(e.target.value));
+  const handlePreis = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setPreis(value);
+    setPreisError(!isValidPreis(value) ? 'Preis muss positiv sein.' : '');
+  };
+
+  const handleRabatt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setRabatt(value);
+    setRabattError(
+      !isValidRabatt(value) ? 'Rabatt muss zwischen 0 und 1 liegen.' : '',
+    );
+  };
+
   const handleSchlagwort = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSchlagwort(e.target.value);
   const addSchlagwort = () => {
@@ -111,14 +150,30 @@ const CreateBookForm: React.FC = () => {
   const removeSchlagwort = (i: number) =>
     setSchlagwoerter((prev) => prev.filter((_, idx) => idx !== i));
 
-  const handleHomepage = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setHomepage(e.target.value);
-  const handleRating = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setRating(Number(e.target.value));
+  const handleHomepage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setHomepage(value);
+    setHomepageError(
+      isValidUrl(value) ? '' : 'Homepage muss eine gültige URL sein.',
+    );
+  };
+
+  const handleRating = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setRating(value);
+    setRatingError(
+      !isValidRating(value)
+        ? 'Rating muss eine ganze Zahl zwischen 0 und 5 sein.'
+        : '',
+    );
+  };
+
   const handleBeschriftung = (e: React.ChangeEvent<HTMLInputElement>) =>
     setBeschriftung(e.target.value);
+
   const handleContentType = (e: React.ChangeEvent<HTMLInputElement>) =>
     setContentType(e.target.value);
+
   const addAbbildung = () => {
     if (beschriftung && contentType) {
       setAbbildungen((prev) => [...prev, { beschriftung, contentType }]);
@@ -127,15 +182,51 @@ const CreateBookForm: React.FC = () => {
     }
   };
 
-  //–– Submit
+  // --- Submit-Handler mit Validierung aller Felder ---
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    let valid = true;
 
     if (!titel.trim()) {
-      setError('Titel ist ein Pflichtfeld.');
-      return;
+      setTitelError('Titel ist ein Pflichtfeld.');
+      valid = false;
     }
+
+    if (!isValidISBN(isbn)) {
+      setIsbnError(
+        'Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)',
+      );
+      valid = false;
+    }
+
+    if (!isValidPreis(preis)) {
+      setPreisError('Preis muss positiv sein.');
+      valid = false;
+    }
+
+    if (!isValidRabatt(rabatt)) {
+      setRabattError('Rabatt muss zwischen 0 und 1 liegen.');
+      valid = false;
+    }
+
+    if (!isValidRating(rating)) {
+      setRatingError('Rating muss eine ganze Zahl zwischen 0 und 5 sein.');
+      valid = false;
+    }
+
+    if (!isValidDate(datum)) {
+      setDatumError('Datum muss im Format JJJJ-MM-TT sein.');
+      valid = false;
+    }
+
+    if (!isValidUrl(homepage)) {
+      setHomepageError('Homepage muss eine gültige URL sein.');
+      valid = false;
+    }
+
+    if (!valid) return;
 
     const payload: BuchInput = {
       titel: { titel, untertitel },
@@ -163,6 +254,8 @@ const CreateBookForm: React.FC = () => {
     }
   };
 
+  // --- Render ---
+
   return (
     <Box as="form" onSubmit={onSubmit} p={4}>
       <Stack gap={6}>
@@ -170,11 +263,14 @@ const CreateBookForm: React.FC = () => {
         <HStack gap={6} align="flex-start" flexWrap="wrap">
           <Box flex="1" minW={0}>
             <Text fontWeight="bold">Titel *</Text>
-            <Input
-              value={titel}
-              onChange={handleTitel}
-              placeholder="Titel eingeben"
-            />
+            <Field.Root invalid={!!titelError}>
+              <Input
+                value={titel}
+                onChange={handleTitel}
+                placeholder="Titel eingeben"
+              />
+              {titelError && <Field.ErrorText>{titelError}</Field.ErrorText>}
+            </Field.Root>
           </Box>
           <Box flex="1" minW={0}>
             <Text>Untertitel</Text>
@@ -190,7 +286,10 @@ const CreateBookForm: React.FC = () => {
         <HStack gap={6} align="flex-start" flexWrap="wrap">
           <Box flex="1" minW={0}>
             <Text>Erscheinungsdatum</Text>
-            <Input type="date" value={datum} onChange={handleDatum} />
+            <Field.Root invalid={!!datumError}>
+              <Input type="date" value={datum} onChange={handleDatum} />
+              {datumError && <Field.ErrorText>{datumError}</Field.ErrorText>}
+            </Field.Root>
           </Box>
           <Box flex="1" minW={0}>
             <Text>Buchart</Text>
@@ -214,23 +313,22 @@ const CreateBookForm: React.FC = () => {
                 onChange={handleIsbn}
                 placeholder="z. B. 978-0-007-00644-1"
               />
-              {isbnError && (
-                <Field.ErrorText>
-                  {isbnError}
-                </Field.ErrorText>
-              )}
+              {isbnError && <Field.ErrorText>{isbnError}</Field.ErrorText>}
             </Field.Root>
           </Box>
           <Box flex="1" minW={0}>
             <Text>Preis (€)</Text>
-            <Input
-              type="number"
-              min={0}
-              step={0.01}
-              value={preis}
-              onChange={handlePreis}
-              placeholder="Preis"
-            />
+            <Field.Root invalid={!!preisError}>
+              <Input
+                type="number"
+                min={0}
+                step={0.01}
+                value={preis}
+                onChange={handlePreis}
+                placeholder="Preis"
+              />
+              {preisError && <Field.ErrorText>{preisError}</Field.ErrorText>}
+            </Field.Root>
           </Box>
         </HStack>
 
@@ -238,14 +336,18 @@ const CreateBookForm: React.FC = () => {
         <HStack gap={6} align="flex-start" flexWrap="wrap">
           <Box flex="1" minW={0}>
             <Text>Rabatt (%)</Text>
-            <Input
-              type="number"
-              min={0}
-              step={0.01}
-              value={rabatt}
-              onChange={handleRabatt}
-              placeholder="Rabatt"
-            />
+            <Field.Root invalid={!!rabattError}>
+              <Input
+                type="number"
+                min={0}
+                max={1}
+                step={0.01}
+                value={rabatt}
+                onChange={handleRabatt}
+                placeholder="Rabatt"
+              />
+              {rabattError && <Field.ErrorText>{rabattError}</Field.ErrorText>}
+            </Field.Root>
           </Box>
           <Box flex="1" minW={0}>
             <Text>Schlagwörter</Text>
@@ -305,12 +407,22 @@ const CreateBookForm: React.FC = () => {
           </Box>
           <Box flex="1" minW={0}>
             <Text>Homepage</Text>
-            <InputGroup
-              startElement="https://"
-              startElementProps={{ color: "fg.muted" }}
-            >
-              <Input ps="8ch" placeholder="yoursite.com" value={homepage} onChange={handleHomepage}/>
-            </InputGroup>
+            <Field.Root invalid={!!homepageError}>
+              <InputGroup
+                startElement="https://"
+                startElementProps={{ color: 'fg.muted' }}
+              >
+                <Input
+                  ps="8ch"
+                  placeholder="yoursite.com"
+                  value={homepage}
+                  onChange={handleHomepage}
+                />
+              </InputGroup>
+              {homepageError && (
+                <Field.ErrorText>{homepageError}</Field.ErrorText>
+              )}
+            </Field.Root>
           </Box>
         </HStack>
 
@@ -318,14 +430,17 @@ const CreateBookForm: React.FC = () => {
         <HStack gap={6} align="flex-start" flexWrap="wrap">
           <Box flex="1" minW={0}>
             <Text>Rating</Text>
-            <Input
-              type="number"
-              min={1}
-              max={5}
-              value={rating}
-              onChange={handleRating}
-              placeholder="1–5"
-            />
+            <Field.Root invalid={!!ratingError}>
+              <Input
+                type="number"
+                min={1}
+                max={5}
+                value={rating}
+                onChange={handleRating}
+                placeholder="1–5"
+              />
+              {ratingError && <Field.ErrorText>{ratingError}</Field.ErrorText>}
+            </Field.Root>
           </Box>
           <Box flex="1" minW={0}>
             <Text>Abbildungen</Text>
