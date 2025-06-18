@@ -188,7 +188,11 @@ const CreateBookForm: React.FC = () => {
   };
 
   // --- Neuer Handler für Abbildungen-Upload ---
-  const handleAbbildungenUpload = ({ acceptedFiles }) => {
+  const handleAbbildungenUpload = ({
+    acceptedFiles,
+  }: {
+    acceptedFiles: File[];
+  }) => {
     const neueAbbildungen = acceptedFiles.map((file) => ({
       beschriftung: file.name,
       contentType: file.name.split('.').pop() || '',
@@ -204,13 +208,6 @@ const CreateBookForm: React.FC = () => {
 
     if (!titel.trim()) {
       setTitelError('Titel ist ein Pflichtfeld.');
-      valid = false;
-    }
-
-    if (!isValidISBN(isbn)) {
-      setIsbnError(
-        'Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)',
-      );
       valid = false;
     }
 
@@ -260,7 +257,6 @@ const CreateBookForm: React.FC = () => {
 
     try {
       const res = await createBuch(payload);
-      console.log('Buch erstellt:', payload);
       if (res.data.errors && res.data.errors.length) {
         setError(res.data.errors[0].message);
       } else {
