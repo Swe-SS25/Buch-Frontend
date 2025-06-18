@@ -7,6 +7,7 @@ import {
   CloseButton,
   Field,
   Flex,
+  FileUpload,
   HStack,
   Input,
   Stack,
@@ -14,17 +15,16 @@ import {
   Text,
   Wrap,
   WrapItem,
-  FileUpload,
 } from '@chakra-ui/react';
 import { HiUpload } from 'react-icons/hi';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   BuchArt,
   type AbbildungInput,
   type BuchInput,
 } from '@/graphql/interfaces';
 import { createBuch } from '@/graphql/queries';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // --- Validierungsfunktionen ---
 function isValidISBN(isbn: string): boolean {
@@ -188,12 +188,12 @@ const CreateBookForm: React.FC = () => {
   };
 
   // --- Neuer Handler für Abbildungen-Upload ---
-  const handleAbbildungenUpload = (files: FileList) => {
-    const neueAbbildungen = Array.from(files).map((file) => ({
+  const handleAbbildungenUpload = ({ acceptedFiles }) => {
+    const neueAbbildungen = acceptedFiles.map((file) => ({
       beschriftung: file.name,
       contentType: file.name.split('.').pop() || '',
     }));
-    setAbbildungen((prev) => [...prev, ...neueAbbildungen]);
+    setAbbildungen(neueAbbildungen);
   };
 
   // --- Submit-Handler mit Validierung aller Felder ---
@@ -252,11 +252,15 @@ const CreateBookForm: React.FC = () => {
       datum,
       homepage,
       schlagwoerter,
-      abbildungen,
+      abbildungen: abbildungen.map((a) => ({
+        beschriftung: a.beschriftung,
+        contentType: a.contentType,
+      })),
     };
 
     try {
       const res = await createBuch(payload);
+      console.log('Buch erstellt:', payload);
       if (res.data.errors && res.data.errors.length) {
         setError(res.data.errors[0].message);
       } else {
@@ -453,7 +457,7 @@ const CreateBookForm: React.FC = () => {
             <FileUpload.Root
               accept="image/*"
               multiple={true}
-              onFilesChange={handleAbbildungenUpload}
+              onFileChange={handleAbbildungenUpload}
             >
               <FileUpload.HiddenInput />
               <FileUpload.Trigger>
