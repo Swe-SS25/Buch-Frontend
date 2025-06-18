@@ -15,7 +15,9 @@ import {
   Text,
   Wrap,
   WrapItem,
+  FileUpload,
 } from '@chakra-ui/react';
+import { HiUpload } from 'react-icons/hi';
 import {
   BuchArt,
   type AbbildungInput,
@@ -24,16 +26,6 @@ import {
 import { createBuch } from '@/graphql/queries';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const ChakraSelect = chakra('select', {
-  base: {
-    width: '100%',
-    p: 2,
-    borderRadius: 'md',
-    borderColor: 'gray.200',
-    _focus: { borderColor: 'blue.500', boxShadow: 'outline' },
-  },
-});
 
 // --- Validierungsfunktionen ---
 const isValidISBN = (isbn: string) => {
@@ -61,10 +53,20 @@ const isValidDate = (value: string | undefined) =>
 const isValidUrl = (value: string | undefined) =>
   !value || /^https?:\/\/[^\s$.?#].[^\s]*$/.test(value);
 
+// ChakraSelect bleibt wie gehabt
+const ChakraSelect = chakra('select', {
+  base: {
+    width: '100%',
+    p: 2,
+    borderRadius: 'md',
+    borderColor: 'gray.200',
+    _focus: { borderColor: 'blue.500', boxShadow: 'outline' },
+  },
+});
+
 const CreateBookForm: React.FC = () => {
   const navigate = useNavigate();
 
-  // States:
   // States für die Felder
   const [titel, setTitel] = useState<string>('');
   const [untertitel, setUntertitel] = useState<string>('');
@@ -78,8 +80,6 @@ const CreateBookForm: React.FC = () => {
   const [lieferbar, setLieferbar] = useState<boolean>(true);
   const [homepage, setHomepage] = useState<string>('');
   const [rating, setRating] = useState<number>(5);
-  const [beschriftung, setBeschriftung] = useState<string>('');
-  const [contentType, setContentType] = useState<string>('');
   const [abbildungen, setAbbildungen] = useState<AbbildungInput[]>([]);
 
   // States für die Fehlerbehandlung
@@ -141,12 +141,14 @@ const CreateBookForm: React.FC = () => {
 
   const handleSchlagwort = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSchlagwort(e.target.value);
+
   const addSchlagwort = () => {
     if (schlagwort.trim()) {
       setSchlagwoerter((prev) => [...prev, schlagwort.trim()]);
       setSchlagwort('');
     }
   };
+
   const removeSchlagwort = (i: number) =>
     setSchlagwoerter((prev) => prev.filter((_, idx) => idx !== i));
 
@@ -168,22 +170,16 @@ const CreateBookForm: React.FC = () => {
     );
   };
 
-  const handleBeschriftung = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setBeschriftung(e.target.value);
-
-  const handleContentType = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setContentType(e.target.value);
-
-  const addAbbildung = () => {
-    if (beschriftung && contentType) {
-      setAbbildungen((prev) => [...prev, { beschriftung, contentType }]);
-      setBeschriftung('');
-      setContentType('');
-    }
+  // --- Neuer Handler für Abbildungen-Upload ---
+  const handleAbbildungenUpload = (files: FileList) => {
+    const neueAbbildungen = Array.from(files).map((file) => ({
+      beschriftung: file.name,
+      contentType: file.name.split('.').pop() || '',
+    }));
+    setAbbildungen((prev) => [...prev, ...neueAbbildungen]);
   };
 
   // --- Submit-Handler mit Validierung aller Felder ---
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -255,7 +251,6 @@ const CreateBookForm: React.FC = () => {
   };
 
   // --- Render ---
-
   return (
     <Box as="form" onSubmit={onSubmit} p={4}>
       <Stack gap={6}>
@@ -444,20 +439,20 @@ const CreateBookForm: React.FC = () => {
           </Box>
           <Box flex="1" minW={0}>
             <Text>Abbildungen</Text>
-            <Stack gap={2}>
-              <Input
-                placeholder="Beschriftung"
-                value={beschriftung}
-                onChange={handleBeschriftung}
-              />
-              <Input
-                placeholder="Content-Type"
-                value={contentType}
-                onChange={handleContentType}
-              />
-              <Button size="sm" onClick={addAbbildung} type="button">
-                Abbildung hinzufügen
-              </Button>
+            <FileUpload.Root
+              accept="image/*"
+              multiple={true}
+              onFilesChange={handleAbbildungenUpload}
+            >
+              <FileUpload.HiddenInput />
+              <FileUpload.Trigger>
+                <Button variant="outline" size="sm">
+                  <HiUpload /> Upload file
+                </Button>
+              </FileUpload.Trigger>
+              <FileUpload.List />
+            </FileUpload.Root>
+            <Stack mt={2} gap={2}>
               {abbildungen.map((a, i) => (
                 <Text key={i}>
                   {a.beschriftung}: {a.contentType}
