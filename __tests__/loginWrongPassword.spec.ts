@@ -5,7 +5,8 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Benutzername' }).click();
   await page.getByRole('textbox', { name: 'Benutzername' }).fill('admin');
   await page.getByRole('textbox', { name: 'Passwort' }).click();
-  await page.getByRole('textbox', { name: 'Passwort' }).fill('p');
+  await page.getByRole('textbox', { name: 'Passwort' }).fill('q');
   await page.getByRole('button', { name: 'Einloggen' }).click();
-  await expect(page.getByRole('link', { name: 'Buch Anlegen' })).toBeVisible();
+  await expect(page.getByText('FehlerLogin fehlgeschlagen.')).toBeVisible();
+  await expect(page.locator('form')).toContainText('FehlerLogin fehlgeschlagen. Bitte überprüfe deine Eingaben. Falscher Benutzername oder falsches Passwort');
 });
