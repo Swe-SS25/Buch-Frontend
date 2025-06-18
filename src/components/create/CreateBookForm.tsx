@@ -463,13 +463,6 @@ const CreateBookForm: React.FC = () => {
               </FileUpload.Trigger>
               <FileUpload.List />
             </FileUpload.Root>
-            <Stack mt={2} gap={2}>
-              {abbildungen.map((a, i) => (
-                <Text key={i}>
-                  {a.beschriftung}: {a.contentType}
-                </Text>
-              ))}
-            </Stack>
           </Box>
         </HStack>
       </Stack>
