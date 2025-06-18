@@ -8,7 +8,6 @@ import {
   Center,
   Flex,
   Grid,
-  Heading,
   Image,
   Link,
   Spinner,

@@ -7,7 +7,7 @@ import logo from '@/components/static/logo.png';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');     // <-- Umbenannt
+  const [username, setUsername] = useState(''); // <-- Umbenannt
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -21,13 +21,15 @@ const LoginForm = () => {
       if (!response.loggedIn) {
         setError('Login fehlgeschlagen. Bitte überprüfe deine Eingaben.');
         if (response.errors) {
-          setError(prev => prev + ' ' + response.errors.join(' '));
+          setError((prev) => prev + ' ' + response.errors.join(' '));
         }
       } else {
         navigate('/search');
       }
     } catch (err: any) {
-      setError('Ein Fehler ist aufgetreten: ' + (err.message || 'Unbekannter Fehler'));
+      setError(
+        'Ein Fehler ist aufgetreten: ' + (err.message || 'Unbekannter Fehler'),
+      );
       console.error(err);
     }
   };
@@ -48,7 +50,7 @@ const LoginForm = () => {
             className="login-input"
             placeholder="Benutzername"
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             mb={3}
             required
           />
@@ -57,7 +59,7 @@ const LoginForm = () => {
             type="password"
             placeholder="Passwort"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             mb={3}
             required
           />
@@ -70,7 +72,12 @@ const LoginForm = () => {
               </Alert.Content>
             </Alert.Root>
           )}
-          <Button colorScheme="blue" type="submit" width="full" className="button">
+          <Button
+            colorScheme="blue"
+            type="submit"
+            width="full"
+            className="button"
+          >
             Einloggen
           </Button>
         </form>

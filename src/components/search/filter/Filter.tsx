@@ -91,7 +91,7 @@ const Filter: React.FC = () => {
       </div>
       <br />
       <Button
-      variant="solid"
+        variant="solid"
         onClick={(e) => {
           propagateSearch();
         }}

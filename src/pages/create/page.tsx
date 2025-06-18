@@ -1,10 +1,10 @@
-import LoginForm from '@/components/login/loginForm';
+import CreateBookForm from '@/components/create/CreateBookForm';
 
-export default function Login() {
+export function Create() {
   return (
     <main className="d-flex justify-content-center align-items-center vh-100">
       <div className="card p-4 shadow-sm">
-        <LoginForm />
+        <CreateBookForm />
       </div>
     </main>
   );
