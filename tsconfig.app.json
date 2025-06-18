@@ -11,7 +11,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@graphql/*": ["./src/graphql/*"],
-      "@context/*": ["./src/context/*"],
+      "@context/*": ["./src/context/*"]
     },
     "declaration": true,
     "removeComments": true,
@@ -31,7 +31,7 @@
     "noImplicitReturns": true, // bei jedem Code-Pfad muss es "return" geben
     "noImplicitThis": true, // Fehler bei this mit implizitem "any"
     "noUncheckedIndexedAccess": true, // undefined bei Resultaten fuer Index-Signaturen
-    "preserveWatchOutput": true, 
+    "preserveWatchOutput": true,
 
     /* Bundler mode */
     "allowImportingTsExtensions": true,

@@ -93,28 +93,27 @@ export interface FilterParameter {
     value: string | boolean | number;
 }
 
-
 export interface TitelInput {
-  titel: string;
-  untertitel?: string;
+    titel: string;
+    untertitel?: string;
 }
 
 export interface AbbildungInput {
-  beschriftung: string;
-  contentType: string;
+    beschriftung: string;
+    contentType: string;
 }
 
 // Neu: Input-Typ für die create-Mutation
 export interface BuchInput {
-  isbn?: string;
-  rating?: number;
-  art?: BuchArt;                   // Enum aus dem Schema: Art
-  preis?: number;
-  rabatt?: number;
-  lieferbar?: boolean;
-  datum?: string;
-  homepage?: string;
-  schlagwoerter?: string[];
-  titel: TitelInput;           // non-null im Schema
-  abbildungen?: AbbildungInput[];
+    isbn?: string;
+    rating?: number;
+    art?: BuchArt; // Enum aus dem Schema: Art
+    preis?: number;
+    rabatt?: number;
+    lieferbar?: boolean;
+    datum?: string;
+    homepage?: string;
+    schlagwoerter?: string[];
+    titel: TitelInput; // non-null im Schema
+    abbildungen?: AbbildungInput[];
 }

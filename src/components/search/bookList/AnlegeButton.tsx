@@ -10,7 +10,7 @@ const AdminButton: React.FC = () => {
 
   return (
     <Button asChild>
-      <Link href='/create'>Buch Anlegen</Link>
+      <Link href="/create">Buch Anlegen</Link>
     </Button>
   );
 };

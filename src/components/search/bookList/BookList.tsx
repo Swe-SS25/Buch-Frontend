@@ -57,7 +57,6 @@ const BookList: React.FC = () => {
                   <a href={`/${book.id}/details`}>Details</a>
                 </Button>
               </Table.Cell>
-              
             </Table.Row>
           ))}
         </Table.Body>

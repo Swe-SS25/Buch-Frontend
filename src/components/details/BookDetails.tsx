@@ -5,17 +5,14 @@ import { type Buch } from '@graphql/interfaces';
 import { queryBuch } from '@graphql/queries';
 import {
   Box,
-  Button,
   Center,
   Flex,
   Grid,
-  Heading,
   Image,
   Link,
   Spinner,
   Stack,
   Text,
-  VStack,
 } from '@chakra-ui/react';
 
 const BookDetails: React.FC = () => {
@@ -75,14 +72,13 @@ const BookDetails: React.FC = () => {
     <Box maxW="container.lg" mx="auto" p={6}>
       <Grid templateColumns={{ base: '1fr', md: '5fr 7fr' }} gap={8}>
         <Flex justify="center">
-            <Image
+          <Image
             src="https://archive.org/download/placeholder-image/placeholder-image.jpg"
             alt="Buchabbildung"
             maxW="250px"
             borderRadius="md"
-            />
+          />
         </Flex>
-            
 
         <Stack>
           <Row label="Titel" value={check(buch.titel.titel)} />

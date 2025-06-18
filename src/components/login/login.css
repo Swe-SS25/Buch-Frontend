@@ -1,6 +1,9 @@
 .login-flex {
   position: fixed; /* oder absolute */
-  top: 0; bottom: 0; left: 0; right: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,32 +11,32 @@
 }
 
 .login-flex > div {
-  width: 738px;  /* fixe Breite vom Container */
+  width: 738px; /* fixe Breite vom Container */
   height: 353px; /* fixe Höhe */
   background: #fff9f0;
   border-radius: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 32px; 
+  padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: center; /* vertikal zentrieren */
-  align-items: center;     /* horizontal zentrieren */
+  align-items: center; /* horizontal zentrieren */
   box-sizing: border-box;
 }
 
 .login-input {
-    background-color: rgb(255, 255, 255);
-    color: black;
-    border-color: whitesmoke;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  border-color: whitesmoke;
 }
 
 .button {
-    background-color: #3182CE;
-    color: white;
+  background-color: #3182ce;
+  color: white;
 }
 
 p {
-    color: black;
+  color: black;
 }
 
 .login-box {
@@ -45,4 +48,3 @@ p {
   position: relative;
   padding: 20px 40px;
 }
-

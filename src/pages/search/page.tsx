@@ -6,7 +6,7 @@ import { SearchCriteriaProvider } from '@context/SearchCriteriaContext';
 import Filter from '@/components/search/filter/Filter.tsx';
 import Navbar from '@/components/Nav/navbar';
 import styles from './search.module.css';
-import {  IconButton, } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import AnlegeButton from '@/components/search/bookList/AnlegeButton';
 import Auth from '@/graphql/auth'; // Pfad anpassen
@@ -17,7 +17,7 @@ const SearchPage: React.FC = () => {
 
   function handleLogout(): void {
     Auth.removeAuthCookie(); // Cookie löschen
-    navigate('/');   // z.B. zur Login-Seite weiterleiten
+    navigate('/'); // z.B. zur Login-Seite weiterleiten
   }
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,9 +31,7 @@ const SearchPage: React.FC = () => {
             <div className={styles.searchbar}>
               <Searchbar />
             </div>
-            {isOpen && (
-                  <Filter />
-            )}
+            {isOpen && <Filter />}
             <IconButton
               aria-label={isOpen ? 'Verstecken' : 'Anzeigen'}
               size="lg"

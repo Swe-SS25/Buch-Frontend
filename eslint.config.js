@@ -478,7 +478,7 @@ export default tseslint.config(
         extends: [
             eslint.configs.recommended,
             ...tseslint.configs.strict,
-            ...tseslint.configs.stylistic
+            ...tseslint.configs.stylistic,
         ],
 
         languageOptions: {

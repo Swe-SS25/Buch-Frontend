@@ -28,16 +28,34 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // --- Validierungsfunktionen ---
-const isValidISBN = (isbn: string) => {
-  const clean = isbn.replace(/[\s-]/g, '');
-  if (!/^\d{13}$/.test(clean)) return false;
-  let sum = 0;
-  for (let i = 0; i < 12; i++)
-    sum += parseInt(clean[i] ?? '0') * (i % 2 === 0 ? 1 : 3);
-  const check = (10 - (sum % 10)) % 10;
-  return check === parseInt(clean[12] ?? '0');
-};
+function isValidISBN(isbn: string): boolean {
+  // Entferne Bindestriche und Leerzeichen
+  const cleanIsbn = isbn.replace(/[-\s]/g, '');
 
+  // Prüfe auf ISBN-10
+  if (/^\d{9}[\dX]$/.test(cleanIsbn)) {
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += (i + 1) * parseInt(cleanIsbn.charAt(i));
+    }
+    let check =
+      cleanIsbn.charAt(9) === 'X' ? 10 : parseInt(cleanIsbn.charAt(9));
+    sum += 10 * check;
+    return sum % 11 === 0;
+  }
+
+  // Prüfe auf ISBN-13
+  if (/^\d{13}$/.test(cleanIsbn)) {
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+      sum += parseInt(cleanIsbn.charAt(i)) * (i % 2 === 0 ? 1 : 3);
+    }
+    let check = (10 - (sum % 10)) % 10;
+    return check === parseInt(cleanIsbn.charAt(12));
+  }
+
+  return false;
+}
 const isValidRating = (value: number) =>
   Number.isInteger(value) && value >= 0 && value <= 5;
 
@@ -403,17 +421,11 @@ const CreateBookForm: React.FC = () => {
           <Box flex="1" minW={0}>
             <Text>Homepage</Text>
             <Field.Root invalid={!!homepageError}>
-              <InputGroup
-                startElement="https://"
-                startElementProps={{ color: 'fg.muted' }}
-              >
-                <Input
-                  ps="8ch"
-                  placeholder="yoursite.com"
-                  value={homepage}
-                  onChange={handleHomepage}
-                />
-              </InputGroup>
+              <Input
+                placeholder="https://yoursite.com"
+                value={homepage}
+                onChange={handleHomepage}
+              />
               {homepageError && (
                 <Field.ErrorText>{homepageError}</Field.ErrorText>
               )}
