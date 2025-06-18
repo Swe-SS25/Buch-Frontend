@@ -1,10 +1,11 @@
 import BookDetails from '@/components/details/BookDetails';
 import { Button, Card, Center } from '@chakra-ui/react';
+import styles from './details.module.css';
 
 const BuchDetails = () => {
   return (
-    <Center>
-      <Card.Root margin="40" width="50%">
+    <Center >
+      <Card.Root className={styles.wrapper}>
         <Card.Body>
           <BookDetails />
         </Card.Body>

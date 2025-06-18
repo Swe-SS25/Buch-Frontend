@@ -71,15 +71,6 @@ const BookDetails: React.FC = () => {
   return (
     <Box maxW="container.lg" mx="auto" p={6}>
       <Grid templateColumns={{ base: '1fr', md: '5fr 7fr' }} gap={8}>
-        <Flex justify="center">
-          <Image
-            src="https://archive.org/download/placeholder-image/placeholder-image.jpg"
-            alt="Buchabbildung"
-            maxW="250px"
-            borderRadius="md"
-          />
-        </Flex>
-
         <Stack>
           <Row label="Titel" value={check(buch.titel.titel)} />
           <Row label="Untertitel" value={check(buch.titel.untertitel)} />
@@ -117,6 +108,14 @@ const BookDetails: React.FC = () => {
           />
           <Row label="Lieferbar" value={buch.lieferbar ? 'Ja' : 'Nein'} />
         </Stack>
+        <Flex justify="center">
+          <Image
+            src="https://archive.org/download/placeholder-image/placeholder-image.jpg"
+            alt="Buchabbildung"
+            maxW="250px"
+            borderRadius="md"
+          />
+        </Flex>
       </Grid>
     </Box>
   );
