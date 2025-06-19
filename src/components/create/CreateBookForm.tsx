@@ -45,7 +45,7 @@ function isValidISBN(isbn: string): boolean {
   return false;
 }
 const isValidRating = (value: number) =>
-  Number.isInteger(value) && value >= 0 && value <= 5;
+  Number.isInteger(value) && value >= 1 && value <= 5;
 
 const isValidPreis = (value: number) =>
   typeof value === 'number' && !isNaN(value) && value >= 0;
@@ -64,8 +64,9 @@ const ChakraSelect = chakra('select', {
   base: {
     width: '100%',
     p: 2,
-    borderRadius: 'md',
+    border: '1px solid',
     borderColor: 'gray.200',
+    borderRadius: 'md',
     _focus: { borderColor: 'blue.500', boxShadow: 'outline' },
   },
 });
@@ -176,7 +177,7 @@ const CreateBookForm: React.FC = () => {
     );
   };
 
-  // --- Neuer Handler für Abbildungen-Upload ---
+  // --- Handler Abbildungen-Upload ---
   const handleAbbildungenUpload = ({
     acceptedFiles,
   }: {
@@ -211,7 +212,7 @@ const CreateBookForm: React.FC = () => {
     }
 
     if (!isValidRating(rating)) {
-      setRatingError('Rating muss eine ganze Zahl zwischen 0 und 5 sein.');
+      setRatingError('Rating muss eine ganze Zahl zwischen 1 und 5 sein.');
       valid = false;
     }
 
@@ -243,6 +244,8 @@ const CreateBookForm: React.FC = () => {
         contentType: a.contentType,
       })),
     };
+
+    console.log('Payload:', payload);
 
     try {
       const res = await createBuch(payload);
