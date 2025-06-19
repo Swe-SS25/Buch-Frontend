@@ -16,6 +16,7 @@ const DeleteBuchButton: React.FC<DeleteBuchButtonProps> = ({ id, onDeleted }) =>
     try {
       const response: AxiosResponse = await deleteBuch(id);
       console.log('Delete response:', response);
+      window.location.reload()
       onDeleted?.();
     } catch (err: any) {
       console.error(err);
