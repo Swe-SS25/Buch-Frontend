@@ -10,7 +10,7 @@ import {
   RatingGroup,
   Stack,
 } from '@chakra-ui/react';
-import style from './filter.module.css';
+import style from '@/components/search/filter/filter.module.css';
 
 const Filter: React.FC = () => {
   const [lieferbar, setLieferbar] = useState<boolean>(true);

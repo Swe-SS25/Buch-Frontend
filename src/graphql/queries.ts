@@ -145,3 +145,29 @@ export const createBuch = async (input: BuchInput): Promise<AxiosResponse> => {
 
     return axios.request(options);
 };
+
+export const deleteBuch = async (id: string): Promise<AxiosResponse> => {
+    const mutation = `
+    mutation DeleteBuch($id: ID!) {
+      delete(id: $id)
+    }
+    `;
+
+    const options = {
+        method: 'POST',
+        url: '/graphql',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-REQUEST-TYPE': 'GraphQL',
+            ...(auth.checkAuthCookie() && {
+                Authorization: `Bearer ${auth.getAuthCookie().token}`,
+            }),
+        },
+        data: {
+            query: mutation,
+            variables: { id },
+        },
+    };
+
+    return axios.request(options);
+};

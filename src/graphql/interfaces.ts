@@ -60,7 +60,7 @@ export interface Titel {
 }
 
 export interface Buch {
-    id: number;
+    id: string;
     version: number;
     isbn: string;
     rating?: number;

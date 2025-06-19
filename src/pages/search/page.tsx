@@ -8,7 +8,7 @@ import Navbar from '@/components/Nav/navbar';
 import styles from './search.module.css';
 import { IconButton } from '@chakra-ui/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import AnlegeButton from '@/components/search/bookList/AnlegeButton';
+import AnlegeButton from '@/components/search/AnlegeButton';
 import Auth from '@/graphql/auth'; // Pfad anpassen
 import { useNavigate } from 'react-router';
 
