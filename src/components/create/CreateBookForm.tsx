@@ -7,6 +7,7 @@ import {
   CloseButton,
   Field,
   Flex,
+  FileUpload,
   HStack,
   Input,
   Stack,
@@ -14,34 +15,22 @@ import {
   Text,
   Wrap,
   WrapItem,
-  FileUpload,
+  RatingGroup,
 } from '@chakra-ui/react';
 import { HiUpload } from 'react-icons/hi';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   BuchArt,
   type AbbildungInput,
   type BuchInput,
 } from '@/graphql/interfaces';
 import { createBuch } from '@/graphql/queries';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // --- Validierungsfunktionen ---
 function isValidISBN(isbn: string): boolean {
   // Entferne Bindestriche und Leerzeichen
   const cleanIsbn = isbn.replace(/[-\s]/g, '');
-
-  // Prüfe auf ISBN-10
-  if (/^\d{9}[\dX]$/.test(cleanIsbn)) {
-    let sum = 0;
-    for (let i = 0; i < 9; i++) {
-      sum += (i + 1) * parseInt(cleanIsbn.charAt(i));
-    }
-    let check =
-      cleanIsbn.charAt(9) === 'X' ? 10 : parseInt(cleanIsbn.charAt(9));
-    sum += 10 * check;
-    return sum % 11 === 0;
-  }
 
   // Prüfe auf ISBN-13
   if (/^\d{13}$/.test(cleanIsbn)) {
@@ -56,7 +45,7 @@ function isValidISBN(isbn: string): boolean {
   return false;
 }
 const isValidRating = (value: number) =>
-  Number.isInteger(value) && value >= 0 && value <= 5;
+  Number.isInteger(value) && value >= 1 && value <= 5;
 
 const isValidPreis = (value: number) =>
   typeof value === 'number' && !isNaN(value) && value >= 0;
@@ -75,8 +64,9 @@ const ChakraSelect = chakra('select', {
   base: {
     width: '100%',
     p: 2,
-    borderRadius: 'md',
+    border: '1px solid',
     borderColor: 'gray.200',
+    borderRadius: 'md',
     _focus: { borderColor: 'blue.500', boxShadow: 'outline' },
   },
 });
@@ -187,13 +177,17 @@ const CreateBookForm: React.FC = () => {
     );
   };
 
-  // --- Neuer Handler für Abbildungen-Upload ---
-  const handleAbbildungenUpload = (files: FileList) => {
-    const neueAbbildungen = Array.from(files).map((file) => ({
+  // --- Handler Abbildungen-Upload ---
+  const handleAbbildungenUpload = ({
+    acceptedFiles,
+  }: {
+    acceptedFiles: File[];
+  }) => {
+    const neueAbbildungen = acceptedFiles.map((file) => ({
       beschriftung: file.name,
       contentType: file.name.split('.').pop() || '',
     }));
-    setAbbildungen((prev) => [...prev, ...neueAbbildungen]);
+    setAbbildungen(neueAbbildungen);
   };
 
   // --- Submit-Handler mit Validierung aller Felder ---
@@ -204,13 +198,6 @@ const CreateBookForm: React.FC = () => {
 
     if (!titel.trim()) {
       setTitelError('Titel ist ein Pflichtfeld.');
-      valid = false;
-    }
-
-    if (!isValidISBN(isbn)) {
-      setIsbnError(
-        'Bitte eine gültige ISBN-13 angeben (z. B. 978-0-007-00644-1)',
-      );
       valid = false;
     }
 
@@ -225,7 +212,7 @@ const CreateBookForm: React.FC = () => {
     }
 
     if (!isValidRating(rating)) {
-      setRatingError('Rating muss eine ganze Zahl zwischen 0 und 5 sein.');
+      setRatingError('Rating muss eine ganze Zahl zwischen 1 und 5 sein.');
       valid = false;
     }
 
@@ -252,8 +239,13 @@ const CreateBookForm: React.FC = () => {
       datum,
       homepage,
       schlagwoerter,
-      abbildungen,
+      abbildungen: abbildungen.map((a) => ({
+        beschriftung: a.beschriftung,
+        contentType: a.contentType,
+      })),
     };
+
+    console.log('Payload:', payload);
 
     try {
       const res = await createBuch(payload);
@@ -437,14 +429,17 @@ const CreateBookForm: React.FC = () => {
           <Box flex="1" minW={0}>
             <Text>Rating</Text>
             <Field.Root invalid={!!ratingError}>
-              <Input
-                type="number"
-                min={1}
-                max={5}
+              <RatingGroup.Root
+                count={5}
+                size="md"
                 value={rating}
-                onChange={handleRating}
-                placeholder="1–5"
-              />
+                onValueChange={({ value }: { value: number | null }) =>
+                  handleRating({ target: { value: value ?? 0 } } as any)
+                }
+              >
+                <RatingGroup.HiddenInput />
+                <RatingGroup.Control />
+              </RatingGroup.Root>
               {ratingError && <Field.ErrorText>{ratingError}</Field.ErrorText>}
             </Field.Root>
           </Box>
@@ -453,7 +448,7 @@ const CreateBookForm: React.FC = () => {
             <FileUpload.Root
               accept="image/*"
               multiple={true}
-              onFilesChange={handleAbbildungenUpload}
+              onFileChange={handleAbbildungenUpload}
             >
               <FileUpload.HiddenInput />
               <FileUpload.Trigger>
@@ -463,13 +458,6 @@ const CreateBookForm: React.FC = () => {
               </FileUpload.Trigger>
               <FileUpload.List />
             </FileUpload.Root>
-            <Stack mt={2} gap={2}>
-              {abbildungen.map((a, i) => (
-                <Text key={i}>
-                  {a.beschriftung}: {a.contentType}
-                </Text>
-              ))}
-            </Stack>
           </Box>
         </HStack>
       </Stack>
