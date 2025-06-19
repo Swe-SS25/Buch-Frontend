@@ -26,6 +26,7 @@ dist-ssr
 
 #Certificate
 cert/key.pem
+cert/cert.pem
 
 # Playwright
 /test-results/
