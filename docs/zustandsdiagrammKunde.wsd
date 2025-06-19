@@ -1,0 +1,23 @@
+@startuml Zustandsdiagramm für die Benutzernavigation eines Kunden auf der Website
+
+[*] --> LoginPage: Webseite betreten
+LoginPage --> SearchPage: Anmeldung erfolgreich
+
+state SearchPage {
+    [*] --> Suchkriterien
+    Suchkriterien --> Searchbutton : Suchkriterien eingeben
+    Searchbutton --> BookList : Bücher gefunden
+    Searchbutton --> Fehlermeldung : keine Bücher gefunden
+
+    BookList --> BookDetails : auf "Details" klicken
+    BookList --> Suchkriterien : neue Suche
+
+    Fehlermeldung --> Suchkriterien : neue Suche
+}
+
+BookDetails --> Suchkriterien : zurück zur Suche
+
+BookDetails --> [*]: Webseite verlassen
+Fehlermeldung --> [*]: Webseite verlassen
+BookList --> [*]: Webseite verlassen
+@enduml
