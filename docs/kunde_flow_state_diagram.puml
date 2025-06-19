@@ -1,0 +1,61 @@
+@startuml
+skinparam state {
+  BackgroundColor White
+  BorderColor Black
+  ArrowColor Black
+  FontColor Black
+  FontSize 12
+  ArrowFontSize 10
+}
+skinparam swimlane {
+  BackgroundColor #D5E8D4 // Farbe für "Kunden Page Flow"
+  BorderColor #82B366
+  TitleFontColor Black
+  TitleFontSize 16
+}
+skinparam state<<choice>> {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam state<<end>> {
+  BackgroundColor White
+  BorderColor Black
+  shape End
+}
+
+state "Kunden Page Flow" {
+  state "Startseite / Buchkatalog" as StartseiteKatalog #E0E0E0
+
+  [*] --> StartseiteKatalog
+
+  state "BuecherSuchenUndAnzeigen" as BuecherSuchen #E0E0E0 {
+    TitleFontSize 12
+
+    state "Suchformular & Filter" as Suchformular
+    state "Suche verarbeiten" as SucheVerarbeitenDecision <<choice>>
+    state "Suchergebnisse Anzeigen" as SuchergebnisseAnzeigen
+    state "Fehlermeldung\n\"keine Bücher gefunden\"" as KeineErgebnisseAnzeige
+
+    [*] --> Suchformular
+    Suchformular --> SucheVerarbeitenDecision : Suchkriterien eingeben & Suchen
+    SucheVerarbeitenDecision --> SuchergebnisseAnzeigen : [Bücher gefunden]
+    SucheVerarbeitenDecision --> KeineErgebnisseAnzeige : [Keine Bücher gefunden]
+  }
+
+  state "Buchdetails anzeigen" as BuchdetailsSwimlane #E0E0E0 {
+    TitleFontSize 12
+    state "Buchdetails Anzeigen" as BuchdetailsAnzeigenState #E0E0E0
+  }
+
+  state EndBrowse <<end>>
+
+  StartseiteKatalog --> BuecherSuchen : Stöbern / Suchen initiieren
+  StartseiteKatalog --> BuchdetailsSwimlane.BuchdetailsAnzeigenState : "Buch auswählen (von Startseite)"
+
+  BuecherSuchen.SuchergebnisseAnzeigen --> EndBrowse
+  BuecherSuchen.KeineErgebnisseAnzeige --> EndBrowse
+  BuecherSuchen.SuchergebnisseAnzeigen --> BuchdetailsSwimlane.BuchdetailsAnzeigenState : Buch auswählen
+
+  BuchdetailsSwimlane.BuchdetailsAnzeigenState --> StartseiteKatalog : Zurück zum Katalog
+}
+@enduml
