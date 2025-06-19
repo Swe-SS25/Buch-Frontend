@@ -1,0 +1,21 @@
+@startuml useCaseDiagram
+left to right direction
+skinparam packageStyle rectangle
+actor Admin as "Admin"
+actor Kunde as "Kunde"
+
+rectangle "Buchverwaltung" {
+  (Bücher anlegen) as (Create) 
+  (Bücher suchen) as (Search) 
+  (Bücher editieren) as (Edit)
+  (Details anzeigen) as (Details)
+
+  Admin --> (Create)
+  Admin --> (Search)
+  Admin --> (Edit)
+  Admin --> (Details)
+
+  Kunde --> (Search)
+  Kunde --> (Details)
+}
+@enduml 

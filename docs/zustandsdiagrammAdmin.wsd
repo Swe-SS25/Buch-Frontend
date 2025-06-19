@@ -1,0 +1,44 @@
+@startuml
+title Zustandsdiagramm für die Benutzernavigation eines Admins auf der Website
+
+[*] --> LoginPage: Webseite betreten
+LoginPage --> SearchPage: Anmeldung erfolgreich
+
+state SearchPage {
+    [*] --> Suchkriterien
+    Suchkriterien --> Searchbutton : Suchkriterien eingeben
+    Searchbutton --> BookList : Bücher gefunden
+    Searchbutton --> Fehlermeldung : keine Bücher gefunden
+
+    BookList --> BookDetails : auf "Details" klicken
+    BookList --> Suchkriterien : neue Suche
+    BookList --> AdminBereich : auf "Edit" klicken
+
+    Fehlermeldung --> Suchkriterien : neue Suche
+
+    NeuesBuch --> AdminBereich : Button klicken
+}
+
+state AdminBereich {
+    [*] --> Bucheingabe
+    [*] --> Änderungseingabe
+    Änderungseingabe --> Ändern : Button klicken
+    Ändern --> Success : Änderung übernommen
+    Ändern --> Error : Fehlgeschlagen
+
+    Error --> Änderungseingabe
+    Error --> Bucheingabe
+
+    Bucheingabe --> NeuAnlegen : Button klicken
+    NeuAnlegen --> Success : Neu Angelegt
+    NeuAnlegen --> Error : Fehlgeschlagen
+    
+}
+
+BookDetails --> Suchkriterien : zurück zur Suche
+
+BookDetails --> [*]: Webseite verlassen
+Fehlermeldung --> [*]: Webseite verlassen
+BookList --> [*]: Webseite verlassen
+Success --> [*] : Webseite verlassen
+@enduml
