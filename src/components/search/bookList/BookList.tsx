@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import type { Buch } from '@graphql/interfaces';
 import { useSearchCriteria } from '@context/SearchCriteriaContext';
 import { queryBuecher } from '@graphql/queries';
-import { Button, Center, Table } from '@chakra-ui/react';
+import { Button, Center, Flex, Table } from '@chakra-ui/react';
+import DeleteBuchButton from './DeleteBuchButton';
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<Buch[]>([]);
@@ -53,9 +54,10 @@ const BookList: React.FC = () => {
                 <Table.Cell>{book.preis}</Table.Cell>
                 <Table.Cell>{book.art}</Table.Cell>
                 <Table.Cell>
-                  <Button asChild>
+                  <Button asChild marginRight={5}>
                     <a href={`/${book.id}/details`}>Details</a>
                   </Button>
+                  <DeleteBuchButton id={book.id} />
                 </Table.Cell>
               </Table.Row>
             ))}
