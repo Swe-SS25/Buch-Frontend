@@ -1,0 +1,81 @@
+@startuml
+skinparam state {
+  BackgroundColor White
+  BorderColor Black
+  ArrowColor Black
+  FontColor Black
+  FontSize 12
+  StereotypeFontSize 10
+}
+skinparam swimlane {
+  BackgroundColor #E0E0E0
+  BorderColor Black
+  TitleFontColor Black
+  TitleFontSize 12
+}
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam ellipse {
+  BackgroundColor Black
+  BorderColor Black
+}
+skinparam rhombus {
+  BackgroundColor White
+  BorderColor Black
+}
+
+state "Admin Frontend (index.html)" {
+  note top
+    jwt
+    roles
+    expiration
+  end note
+
+  [*] --> SucheBuecher : Menüpunkt »Suche«
+  [*] --> CreateBuch : Menüpunkt »Neues Buch«
+  [*] --> Home : Logout
+
+  state SucheBuecher {
+    [*] --> Suchformular : Suchkriterien eingeben
+    Suchformular --> Waiting : Button »Suchen«
+    Waiting --> SucheDecision : Suchergebnis eingetroffen
+
+    state SucheDecision <<choice>>
+
+    state Suchergebnis {
+      ErrorMessage
+      GefundeneBuecher
+    }
+
+    SucheDecision --> Suchergebnis.ErrorMessage : kein Buch gefunden
+    SucheDecision --> Suchergebnis.GefundeneBuecher : mind. 1 Buch gefunden
+  }
+
+  state CreateBuch
+  state Home
+  state DetailsBuch
+  state UpdateBuch
+  state DeleteConfirm
+
+  state CreateDecision <<choice>>
+  state UpdateDecision <<choice>>
+
+  SucheBuecher.Suchergebnis.GefundeneBuecher --> DetailsBuch : Link anklicken
+  CreateBuch --> CreateDecision : Button »OK«
+  CreateDecision --> Home : korrekte Daten
+  CreateDecision --> CreateBuch : fehlerhafte Daten
+  DetailsBuch --> UpdateBuch : Button »Bearbeiten«
+  DetailsBuch --> DeleteConfirm : Button »Löschen«
+  DeleteConfirm --> Home : Bestätigen
+  DeleteConfirm --> DetailsBuch : Abbrechen
+  UpdateBuch --> UpdateDecision : Button »OK«
+  UpdateDecision --> Home : korrekte Daten
+  UpdateDecision --> UpdateBuch : fehlerhafte Daten
+
+  ' Ignoring the triangle end node and its transition as it doesn't fit standard state diagram notation
+
+}
+
+@enduml

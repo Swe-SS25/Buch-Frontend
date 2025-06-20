@@ -25,7 +25,7 @@ dist-ssr
 *.sw?
 
 #Certificate
-cert/key.pem
+
 
 # Playwright
 /test-results/
