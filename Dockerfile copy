@@ -1,4 +1,4 @@
-# 1. Build-Stage
+# 1. Build-Stagee
 FROM node:23-alpine AS build
 
 WORKDIR /app
