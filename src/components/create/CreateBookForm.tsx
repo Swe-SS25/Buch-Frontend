@@ -59,7 +59,6 @@ const isValidDate = (value: string | undefined) =>
 const isValidUrl = (value: string | undefined) =>
   !value || /^https?:\/\/[^\s$.?#].[^\s]*$/.test(value);
 
-// ChakraSelect bleibt wie gehabt
 const ChakraSelect = chakra('select', {
   base: {
     width: '100%',

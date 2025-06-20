@@ -1,5 +1,5 @@
 .login-flex {
-  position: fixed; /* oder absolute */
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -7,20 +7,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #444340; /* leichtes Creme */
+  background: #444340;
 }
 
 .login-flex > div {
-  width: 738px; /* fixe Breite vom Container */
-  height: 353px; /* fixe Höhe */
+  width: 738px;
+  height: 353px;
   background: #fff9f0;
   border-radius: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   padding: 32px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertikal zentrieren */
-  align-items: center; /* horizontal zentrieren */
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 }
 
