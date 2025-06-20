@@ -56,7 +56,7 @@ export default tseslint.config(
             ecmaVersion: 2024,
             sourceType: 'module',
             parserOptions: {
-                project: true,
+                project: './tsconfig.app.json',
                 ecmaFeatures: {
                     impliedStrict: true,
                 },
