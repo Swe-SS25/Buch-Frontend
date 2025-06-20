@@ -1,9 +1,10 @@
 import LoginForm from '@/components/login/loginForm';
+import styles from './login.module.css';
 
 const Login = () => {
   return (
-    <main className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4 shadow-sm">
+    <main className={styles.container}>
+      <div className={styles.card}>
         <LoginForm />
       </div>
     </main>
