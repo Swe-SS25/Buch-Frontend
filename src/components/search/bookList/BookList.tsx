@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import type { Buch } from '@graphql/interfaces';
 import { useSearchCriteria } from '@context/SearchCriteriaContext';
 import { queryBuecher } from '@graphql/queries';
-import { Button, Center, Flex, Table } from '@chakra-ui/react';
+import { Button, Center, Table } from '@chakra-ui/react';
 import DeleteBuchButton from './DeleteBuchButton';
 
 const BookList: React.FC = () => {
